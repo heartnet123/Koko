@@ -55,7 +55,26 @@ onMounted(async () => {
 
 <template>
   <div class="relative">
-    <!-- Filter button placeholder -->
-    <div>Filter Button</div>
+    <UButton
+      icon="i-solar-filter-linear"
+      trailing-icon="i-solar-alt-arrow-down-linear"
+      color="neutral"
+      variant="outline"
+      class="rounded-xl px-4 py-2.5 min-h-[44px] text-sm font-medium border-muted/80 bg-elevated hover:bg-default text-highlighted transition-all duration-200 cursor-pointer"
+      aria-haspopup="listbox"
+      :aria-expanded="isOpen"
+      @click="isOpen = !isOpen"
+    >
+      <span>{{ selectedGenreIds.length > 0 ? 'Genres' : 'Filter by Genre' }}</span>
+      <UBadge
+        v-if="selectedGenreIds.length > 0"
+        size="sm"
+        color="primary"
+        variant="solid"
+        class="rounded-full px-1.5 py-0.5 text-xs font-semibold"
+      >
+        {{ selectedGenreIds.length }}
+      </UBadge>
+    </UButton>
   </div>
 </template>
