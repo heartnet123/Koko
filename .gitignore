@@ -30,4 +30,5 @@ backend/server.exe
 .workflow/
 .codegraph/
 .superpowers/
-docs/superpowers/
+docs/
+
