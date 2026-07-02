@@ -27,6 +27,29 @@ const selectedGenreIds = computed(() => {
   if (route.query.genre) return getNumbers(route.query.genre)
   return []
 })
+
+onMounted(async () => {
+  try {
+    const res = await fetch('http://localhost:8080/api/genres')
+    if (res.status === 429) {
+      await new Promise(r => setTimeout(r, 2000))
+      const retry = await fetch('http://localhost:8080/api/genres')
+      const d = await retry.json()
+      genres.value = (d.data ?? [])
+        .filter((g: Genre) => g.count > 1000)
+        .slice(0, 20)
+    } else {
+      const d = await res.json()
+      genres.value = (d.data ?? [])
+        .filter((g: Genre) => g.count > 1000)
+        .slice(0, 20)
+    }
+  } catch (e) {
+    console.error('Failed to fetch genres', e)
+  } finally {
+    loading.value = false
+  }
+})
 </script>
 
 <template>
