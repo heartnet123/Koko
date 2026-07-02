@@ -12,22 +12,19 @@ const loading = ref(true)
 
 // Support both 'genres=1,2,3' and legacy 'genre=1'
 const selectedGenreIds = computed(() => {
-  const genresVal = route.query.genres
-  const genreVal = route.query.genre
-  
-  if (genresVal) {
-    const genresStr = Array.isArray(genresVal) ? genresVal[0] : genresVal
-    if (typeof genresStr === 'string') {
-      return genresStr.split(',')
-        .map(id => id.trim())
-        .filter(id => id && !isNaN(Number(id)))
-        .map(Number)
-    }
-  } else if (genreVal) {
-    const genreStr = Array.isArray(genreVal) ? genreVal[0] : genreVal
-    const num = Number(genreStr)
-    return isNaN(num) ? [] : [num]
+  const getNumbers = (val: typeof route.query.genres | typeof route.query.genre): number[] => {
+    if (!val) return []
+    const items = Array.isArray(val) ? val : [val]
+    return items
+      .filter((item): item is string => typeof item === 'string' && item.trim() !== '')
+      .flatMap(item => item.split(','))
+      .map(id => id.trim())
+      .filter(id => id !== '' && !isNaN(Number(id)))
+      .map(Number)
   }
+
+  if (route.query.genres) return getNumbers(route.query.genres)
+  if (route.query.genre) return getNumbers(route.query.genre)
   return []
 })
 </script>
