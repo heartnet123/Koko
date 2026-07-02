@@ -1,11 +1,5 @@
 <script setup lang="ts">
-interface Anime {
-  mal_id: number
-  title: string
-  images: { jpg: { image_url: string; large_image_url: string } }
-  score: number | null
-  type: string | null
-}
+import type { Anime } from '~/types/anime'
 
 interface Genre {
   mal_id: number
@@ -77,7 +71,7 @@ onMounted(async () => {
         <h3 class="text-lg font-medium tracking-tight text-highlighted">Explore {{ genre.name }}</h3>
       </div>
       <div class="flex items-center gap-4">
-        <div class="flex items-center gap-1.5">
+        <div class="hidden md:flex items-center gap-1.5">
           <UButton
             icon="i-solar-alt-arrow-left-linear"
             color="neutral"
@@ -119,7 +113,7 @@ onMounted(async () => {
         v-for="item in animes"
         :key="item.mal_id"
         :to="`/movie/${item.mal_id}`"
-        class="w-[calc((100%-80px)/5)] flex-shrink-0 snap-start flex flex-col group cursor-pointer"
+        class="w-[calc((100%-20px)/2)] sm:w-[calc((100%-40px)/3)] md:w-[calc((100%-60px)/4)] lg:w-[calc((100%-80px)/5)] flex-shrink-0 snap-start flex flex-col group cursor-pointer"
       >
         <div class="relative rounded-2xl overflow-hidden aspect-[3/4] mb-3 shadow-[0_4px_12px_rgb(0,0,0,0.03)] border border-muted/50 bg-elevated">
           <NuxtImg

@@ -1,25 +1,13 @@
 <script setup lang="ts">
-interface Anime {
-  mal_id: number
-  title: string
-  images: { jpg: { image_url: string; large_image_url: string } }
-  score: number | null
-  type: string | null
-}
+import type { Anime } from '~/types/anime'
 
 const route = useRoute()
 const genreId = computed(() => route.query.genre as string)
 const genreName = computed(() => route.query.genre_name as string)
 const orderBy = computed(() => (route.query.order_by as string) || 'popularity')
 
-const animes = ref<Anime[]>([])
-const loading = ref(true)
-
-watch(() => route.fullPath, fetchAnimes, { immediate: true })
-
-async function fetchAnimes() {
-  loading.value = true
-  try {
+const { data: response, status } = await useFetch<{ data: Anime[] }>(
+  () => {
     let url = 'http://localhost:8080/api/anime?limit=24'
     if (genreId.value) {
       url += `&genres=${genreId.value}`
@@ -27,15 +15,14 @@ async function fetchAnimes() {
     if (orderBy.value) {
       url += `&order_by=${orderBy.value}`
     }
-    const res = await fetch(url)
-    const data = await res.json()
-    animes.value = data.data ?? []
-  } catch (e) {
-    console.error('Failed to fetch browse data', e)
-  } finally {
-    loading.value = false
+    return url
+  },
+  {
+    key: `browse-${route.fullPath}`
   }
-}
+)
+const animes = computed(() => response.value?.data ?? [])
+const loading = computed(() => status.value === 'pending')
 </script>
 
 <template>
@@ -62,7 +49,7 @@ async function fetchAnimes() {
       No anime found.
     </div>
 
-    <div v-else class="grid grid-cols-5 gap-5">
+    <div v-else class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5">
       <NuxtLink
         v-for="item in animes"
         :key="item.mal_id"
