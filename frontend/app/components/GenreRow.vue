@@ -30,6 +30,18 @@ const style = computed(() => GENRE_STYLES[props.index % GENRE_STYLES.length])
 
 const animes = ref<Anime[]>([])
 const loading = ref(true)
+const scrollContainer = ref<HTMLElement | null>(null)
+
+const scroll = (direction: 'left' | 'right') => {
+  if (!scrollContainer.value) return
+  const container = scrollContainer.value
+  const scrollAmount = container.clientWidth
+  if (direction === 'left') {
+    container.scrollLeft -= scrollAmount
+  } else {
+    container.scrollLeft += scrollAmount
+  }
+}
 
 onMounted(async () => {
   try {
@@ -64,14 +76,35 @@ onMounted(async () => {
         </div>
         <h3 class="text-lg font-medium tracking-tight text-highlighted">Explore {{ genre.name }}</h3>
       </div>
-      <UButton
-        :label="`See All ${genre.name}`"
-        trailing-icon="i-solar-alt-arrow-right-linear"
-        color="neutral"
-        variant="ghost"
-        size="sm"
-        class="text-toned hover:text-default"
-      />
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-1.5">
+          <UButton
+            icon="i-solar-alt-arrow-left-linear"
+            color="neutral"
+            variant="ghost"
+            size="sm"
+            class="text-toned hover:text-default"
+            @click="scroll('left')"
+          />
+          <UButton
+            icon="i-solar-alt-arrow-right-linear"
+            color="neutral"
+            variant="ghost"
+            size="sm"
+            class="text-toned hover:text-default"
+            @click="scroll('right')"
+          />
+        </div>
+        <UButton
+          :label="`See All ${genre.name}`"
+          :to="`/browse?genre=${genre.mal_id}&genre_name=${genre.name}`"
+          trailing-icon="i-solar-alt-arrow-right-linear"
+          color="neutral"
+          variant="ghost"
+          size="sm"
+          class="text-toned hover:text-default"
+        />
+      </div>
     </div>
 
     <div
@@ -81,12 +114,12 @@ onMounted(async () => {
       Loading {{ genre.name }} anime...
     </div>
 
-    <div v-else class="grid grid-cols-5 gap-5">
+    <div v-else ref="scrollContainer" class="flex gap-5 overflow-x-auto scroll-smooth snap-x snap-mandatory scrollbar-none pb-4">
       <NuxtLink
         v-for="item in animes"
         :key="item.mal_id"
         :to="`/movie/${item.mal_id}`"
-        class="flex flex-col group cursor-pointer"
+        class="w-[calc((100%-80px)/5)] flex-shrink-0 snap-start flex flex-col group cursor-pointer"
       >
         <div class="relative rounded-2xl overflow-hidden aspect-[3/4] mb-3 shadow-[0_4px_12px_rgb(0,0,0,0.03)] border border-muted/50 bg-elevated">
           <NuxtImg
@@ -104,3 +137,13 @@ onMounted(async () => {
     </div>
   </section>
 </template>
+
+<style scoped>
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
+.scrollbar-none {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+</style>
