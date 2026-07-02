@@ -1,0 +1,44 @@
+@import "tailwindcss";
+@import "@nuxt/ui";
+
+@theme {
+  /* Brand: #635BFF mapped to primary */
+  --color-primary-50: oklch(97% 0.02 264);
+  --color-primary-100: oklch(94% 0.05 264);
+  --color-primary-200: oklch(88% 0.10 264);
+  --color-primary-300: oklch(80% 0.16 264);
+  --color-primary-400: oklch(71% 0.22 264);
+  --color-primary-500: oklch(61% 0.27 264);
+  --color-primary-600: oklch(53% 0.27 264);
+  --color-primary-700: oklch(45% 0.23 264);
+  --color-primary-800: oklch(37% 0.18 264);
+  --color-primary-900: oklch(29% 0.13 264);
+  --color-primary-950: oklch(20% 0.09 264);
+}
+
+:root {
+  --ui-bg: #FCFCFD;
+  --ui-bg-elevated: #F4F4F6;
+  --ui-bg-muted: #FCFCFD;
+  --ui-text: #374151;
+  --ui-text-highlighted: #1A1A2E;
+  --ui-text-toned: #6B7280;
+  --ui-border-muted: #E5E7EB;
+}
+
+.dark {
+  --ui-bg: #0F0F1A;
+  --ui-bg-elevated: #24243A;
+  --ui-bg-muted: #0F0F1A;
+  --ui-text: #C3C3D9;
+  --ui-text-highlighted: #FFFFFF;
+  --ui-text-toned: #8E8EA8;
+  --ui-border-muted: #2E2E4A;
+}
+
+html, body {
+  background-color: var(--ui-bg);
+  color: var(--ui-text);
+  font-family: var(--font-sans);
+  transition: background-color 0.2s ease, color 0.2s ease;
+}

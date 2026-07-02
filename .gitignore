@@ -1,0 +1,31 @@
+# Dependency directories
+node_modules/
+**/node_modules/
+
+# Build outputs
+.output/
+.data/
+.nuxt/
+.nitro/
+.cache/
+dist/
+
+# Compiled binaries
+backend/server.exe
+*.exe
+
+# IDEs and local configurations
+.DS_Store
+.fleet/
+.idea/
+.vscode/
+
+# Local env files
+.env
+.env.*
+!.env.example
+
+# Agent / Tooling files
+.omc/
+.workflow/
+.codegraph/
