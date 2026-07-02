@@ -1,11 +1,61 @@
 <script setup lang="ts">
 import type { Anime } from '~/types/anime'
 
+interface Genre {
+  mal_id: number
+  name: string
+  count: number
+}
+
 const { genreIds } = useGenreQuery()
 
 const route = useRoute()
 const genreName = computed(() => route.query.genre_name as string)
 const orderBy = computed(() => (route.query.order_by as string) || 'popularity')
+
+const { data: genresResponse } = await useFetch<{ data: Genre[] }>(
+  'http://localhost:8080/api/genres',
+  {
+    key: 'genres-list',
+    retry: 1,
+    retryDelay: 2000,
+    retryStatusCodes: [429]
+  }
+)
+const genresList = computed(() => genresResponse.value?.data ?? [])
+
+const selectedGenres = computed(() => {
+  return genreIds.value.map(id => {
+    const found = genresList.value.find(g => g.mal_id === id)
+    let name = found?.name
+    if (!name && id === Number(route.query.genre) && route.query.genre_name) {
+      name = route.query.genre_name as string
+    }
+    return {
+      mal_id: id,
+      name: name || `Genre ${id}`
+    }
+  })
+})
+
+const removeGenre = (genreId: number) => {
+  const currentIds = genreIds.value.filter(id => id !== genreId)
+  const query = { ...route.query }
+  
+  if (currentIds.length > 0) {
+    query.genres = currentIds.join(',')
+  } else {
+    delete query.genres
+  }
+  
+  delete query.genre
+  delete query.genre_name
+  
+  navigateTo({
+    path: route.path,
+    query
+  })
+}
 
 const { data: response, status } = await useFetch<{ data: Anime[] }>(
   () => {
@@ -56,6 +106,32 @@ const subtitleText = computed(() => {
       <GenreFilterDropdown />
     </div>
 
+    <!-- Selected Genre Pills Row -->
+    <TransitionGroup
+      v-if="selectedGenres.length > 0"
+      name="list"
+      tag="div"
+      class="flex flex-wrap gap-2 items-center -mt-4 relative"
+    >
+      <UBadge
+        v-for="genre in selectedGenres"
+        :key="genre.mal_id"
+        size="md"
+        variant="subtle"
+        class="rounded-full flex items-center gap-1.5 pl-3 pr-1 py-1 text-primary bg-primary/10 border border-primary/50 font-medium"
+      >
+        <span>{{ genre.name }}</span>
+        <UButton
+          icon="i-solar-close-circle-bold"
+          variant="ghost"
+          color="primary"
+          class="w-11 h-11 -my-3 -mr-1 rounded-full flex items-center justify-center cursor-pointer text-primary/70 hover:text-primary hover:bg-transparent p-0"
+          @click="removeGenre(genre.mal_id)"
+          :aria-label="`Remove ${genre.name} filter`"
+        />
+      </UBadge>
+    </TransitionGroup>
+
     <div class="relative min-h-[300px]">
       <!-- Loading overlay -->
       <div
@@ -101,3 +177,21 @@ const subtitleText = computed(() => {
     </div>
   </div>
 </template>
+
+<style scoped>
+.list-enter-active,
+.list-leave-active {
+  transition: all 0.2s ease;
+}
+.list-enter-from,
+.list-leave-to {
+  opacity: 0;
+  transform: scale(0.9);
+}
+.list-move {
+  transition: transform 0.2s ease;
+}
+.list-leave-active {
+  position: absolute;
+}
+</style>

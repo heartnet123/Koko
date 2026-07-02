@@ -9,32 +9,27 @@ interface Genre {
 
 const route = useRoute()
 const isOpen = ref(false)
-const genres = ref<Genre[]>([])
-const loading = ref(true)
-
-onMounted(async () => {
-  window.addEventListener('click', handleClickOutside)
-  try {
-    let res = await fetch('http://localhost:8080/api/genres')
-    
-    if (res.status === 429) {
-      await new Promise(r => setTimeout(r, 2000))
-      res = await fetch('http://localhost:8080/api/genres')
-    }
-    
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`)
-    }
-    
-    const d = await res.json()
-    genres.value = (d.data ?? [])
-      .filter((g: Genre) => g.count > 1000)
-      .slice(0, 20)
-  } catch (e) {
-    console.error('Failed to fetch genres', e)
-  } finally {
-    loading.value = false
+const { data: genresResponse, status: genresFetchStatus } = await useFetch<{ data: Genre[] }>(
+  'http://localhost:8080/api/genres',
+  {
+    key: 'genres-list',
+    retry: 1,
+    retryDelay: 2000,
+    retryStatusCodes: [429]
   }
+)
+
+const genres = computed(() => {
+  const list = genresResponse.value?.data ?? []
+  return list
+    .filter((g: Genre) => g.count > 1000)
+    .slice(0, 20)
+})
+
+const loading = computed(() => genresFetchStatus.value === 'pending')
+
+onMounted(() => {
+  window.addEventListener('click', handleClickOutside)
 })
 
 const router = useRouter()
