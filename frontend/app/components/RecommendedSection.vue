@@ -45,22 +45,33 @@ onMounted(async () => {
   <section>
     <div class="flex items-center justify-between mb-5">
       <h3 class="text-lg font-medium tracking-tight text-highlighted">Recommended</h3>
-      <div class="flex items-center gap-2">
+      <div class="flex items-center gap-4">
+        <div class="flex items-center gap-1.5">
+          <UButton
+            icon="i-solar-alt-arrow-left-linear"
+            color="neutral"
+            variant="ghost"
+            size="sm"
+            class="text-toned hover:text-default"
+            @click="scroll('left')"
+          />
+          <UButton
+            icon="i-solar-alt-arrow-right-linear"
+            color="neutral"
+            variant="ghost"
+            size="sm"
+            class="text-toned hover:text-default"
+            @click="scroll('right')"
+          />
+        </div>
         <UButton
-          icon="i-solar-alt-arrow-left-linear"
+          label="See All"
+          to="/browse?order_by=popularity"
+          trailing-icon="i-solar-alt-arrow-right-linear"
           color="neutral"
           variant="ghost"
           size="sm"
           class="text-toned hover:text-default"
-          @click="scroll('left')"
-        />
-        <UButton
-          icon="i-solar-alt-arrow-right-linear"
-          color="neutral"
-          variant="ghost"
-          size="sm"
-          class="text-toned hover:text-default"
-          @click="scroll('right')"
         />
       </div>
     </div>
