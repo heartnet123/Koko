@@ -98,9 +98,6 @@ const scroll = (direction: 'left' | 'right') => {
             :alt="item.title"
             class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
           />
-          <div class="absolute bottom-3 left-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur shadow-sm flex items-center justify-center opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all">
-            <UIcon name="i-solar-play-bold" class="w-3.5 h-3.5 ml-0.5 text-highlighted" />
-          </div>
         </div>
         <h4 class="ml-4 text-sm font-medium text-highlighted tracking-tight truncate">{{ item.title }}</h4>
         <p class="ml-4 text-xs text-toned mt-0.5">{{ item.type ?? 'Anime' }}</p>
