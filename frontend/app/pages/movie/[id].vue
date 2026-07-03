@@ -32,7 +32,7 @@ const infoRows = computed(() => {
   const a = anime.value
   return [
     { label: 'Type', value: a.type, icon: 'i-solar-tv-linear' },
-    { label: 'Episodes', value: a.episodes ?? '—', icon: 'i-solar-playlist-minimalistic-linear' },
+    { label: 'Episodes', value: a.episodes ?? '—', icon: 'i-solar-play-linear' },
     { label: 'Status', value: a.status, icon: 'i-solar-clock-circle-linear' },
     { label: 'Aired', value: a.aired?.string ?? '—', icon: 'i-solar-calendar-linear' },
     { label: 'Duration', value: a.duration, icon: 'i-solar-stopwatch-linear' },
