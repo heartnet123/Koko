@@ -50,6 +50,7 @@ const removeGenre = (genreId: number) => {
   
   delete query.genre
   delete query.genre_name
+  delete query.page
   
   navigateTo({
     path: route.path,
@@ -57,9 +58,26 @@ const removeGenre = (genreId: number) => {
   })
 }
 
-const { data: response, status } = await useFetch<{ data: Anime[] }>(
+const limit = 25
+const page = computed(() => {
+  const p = Number(route.query.page)
+  return Number.isInteger(p) && p > 0 ? p : 1
+})
+
+interface Pagination {
+  last_visible_page: number
+  has_next_page: boolean
+  current_page: number
+  items: {
+    count: number
+    total: number
+    per_page: number
+  }
+}
+
+const { data: response, status } = await useFetch<{ data: Anime[], pagination?: Pagination }>(
   () => {
-    let url = 'http://localhost:8080/api/anime?limit=24'
+    let url = `http://localhost:8080/api/anime?limit=${limit}&page=${page.value}`
     if (genreIds.value.length > 0) {
       url += `&genres=${genreIds.value.join(',')}`
     }
@@ -75,7 +93,34 @@ const { data: response, status } = await useFetch<{ data: Anime[] }>(
   }
 )
 const animes = computed(() => response.value?.data ?? [])
+const pagination = computed(() => response.value?.pagination)
+const pageCount = computed(() => pagination.value?.last_visible_page ?? page.value)
+const totalItems = computed(() => pagination.value?.items.total ?? animes.value.length)
 const loading = computed(() => status.value === 'pending')
+const isFirstPage = computed(() => page.value <= 1)
+const isLastPage = computed(() => page.value >= pageCount.value)
+const hasNextPage = computed(() => pagination.value?.has_next_page ?? animes.value.length === limit)
+
+const setPage = (targetPage: number) => {
+  const nextPage = Math.min(Math.max(targetPage, 1), pageCount.value)
+  if (nextPage === page.value) return
+
+  const query = { ...route.query }
+  if (nextPage === 1) {
+    delete query.page
+  } else {
+    query.page = String(nextPage)
+  }
+
+  navigateTo({ path: route.path, query })
+}
+
+const firstPage = () => setPage(1)
+const prevPage = () => setPage(page.value - 1)
+const nextPage = () => {
+  if (hasNextPage.value) setPage(page.value + 1)
+}
+const lastPage = () => setPage(pageCount.value)
 
 const headerText = computed(() => {
   const count = genreIds.value.length
@@ -173,6 +218,52 @@ const subtitleText = computed(() => {
           <h4 class="text-sm font-medium text-highlighted tracking-tight truncate">{{ item.title }}</h4>
           <p class="text-xs text-toned mt-0.5">{{ item.type ?? 'Anime' }}</p>
         </NuxtLink>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+      <div class="flex items-center gap-2">
+        <UButton
+          :disabled="isFirstPage"
+          variant="ghost"
+          icon="i-solar-double-alt-arrow-left-linear"
+          @click="firstPage"
+        >
+          First
+        </UButton>
+        <UButton
+          :disabled="isFirstPage"
+          variant="ghost"
+          icon="i-solar-alt-arrow-left-linear"
+          @click="prevPage"
+        >
+          Previous
+        </UButton>
+      </div>
+
+      <p class="text-sm text-toned px-2">
+        Page <span class="font-semibold text-highlighted">{{ page }}</span> of
+        <span class="font-semibold text-highlighted">{{ pageCount }}</span>
+        <span class="text-muted">({{ totalItems }} anime)</span>
+      </p>
+
+      <div class="flex items-center gap-2">
+        <UButton
+          :disabled="!hasNextPage"
+          variant="ghost"
+          trailing-icon="i-solar-alt-arrow-right-linear"
+          @click="nextPage"
+        >
+          Next
+        </UButton>
+        <UButton
+          :disabled="isLastPage"
+          variant="ghost"
+          trailing-icon="i-solar-double-alt-arrow-right-linear"
+          @click="lastPage"
+        >
+          Last
+        </UButton>
       </div>
     </div>
   </div>
