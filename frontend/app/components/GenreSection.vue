@@ -5,20 +5,23 @@ interface Genre {
   count: number
 }
 
-const genres = ref<Genre[]>([])
-const loading = ref(true)
-
-onMounted(async () => {
-  try {
-    const res = await fetch('http://localhost:8080/api/genres')
-    const data = await res.json()
-    genres.value = (data.data ?? []).filter((g: Genre) => g.count > 1000).slice(0, 10)
-  } catch (e) {
-    console.error('Failed to fetch genres', e)
-  } finally {
-    loading.value = false
+const { data: genresResponse, status } = await useFetch<{ data: Genre[] }>(
+  'http://localhost:8080/api/genres',
+  {
+    key: 'genres-top-list',
+    retry: 1,
+    retryDelay: 2000,
+    retryStatusCodes: [429]
   }
+)
+
+const genres = computed(() => {
+  return (genresResponse.value?.data ?? [])
+    .filter((g: Genre) => g.count > 1000)
+    .slice(0, 10)
 })
+
+const loading = computed(() => status.value === 'pending')
 </script>
 
 <template>

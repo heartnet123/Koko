@@ -22,8 +22,18 @@ const GENRE_STYLES = [
 
 const style = computed(() => GENRE_STYLES[props.index % GENRE_STYLES.length])
 
-const animes = ref<Anime[]>([])
-const loading = ref(true)
+const { data: animeResponse, status } = await useFetch<{ data: Anime[] }>(
+  () => `http://localhost:8080/api/anime?genres=${props.genre.mal_id}&limit=10&order_by=popularity`,
+  {
+    key: `genre-anime-${props.genre.mal_id}`,
+    retry: 1,
+    retryDelay: 2000,
+    retryStatusCodes: [429]
+  }
+)
+
+const animes = computed(() => animeResponse.value?.data ?? [])
+const loading = computed(() => status.value === 'pending')
 const scrollContainer = ref<HTMLElement | null>(null)
 
 const scroll = (direction: 'left' | 'right') => {
@@ -36,29 +46,6 @@ const scroll = (direction: 'left' | 'right') => {
     container.scrollLeft += scrollAmount
   }
 }
-
-onMounted(async () => {
-  try {
-    const res = await fetch(
-      `http://localhost:8080/api/anime?genres=${props.genre.mal_id}&limit=10&order_by=popularity`
-    )
-    if (res.status === 429) {
-      await new Promise(r => setTimeout(r, 2000))
-      const retry = await fetch(
-        `http://localhost:8080/api/anime?genres=${props.genre.mal_id}&limit=10&order_by=popularity`
-      )
-      const d = await retry.json()
-      animes.value = d.data ?? []
-    } else {
-      const d = await res.json()
-      animes.value = d.data ?? []
-    }
-  } catch (e) {
-    console.error(`Failed to fetch animes for ${props.genre.name}`, e)
-  } finally {
-    loading.value = false
-  }
-})
 </script>
 
 <template>
