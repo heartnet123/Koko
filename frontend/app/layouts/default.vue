@@ -58,10 +58,10 @@ const userItems = [
         <!-- Content -->
         <div class="relative w-80 max-w-full bg-default border-l border-muted flex flex-col pt-8 pb-6 h-full shadow-2xl">
           <div class="px-8 mb-6 flex items-center justify-between">
-            <div class="flex items-center gap-3">
+            <NuxtLink to="/" class="flex items-center gap-3 cursor-pointer focus:outline-none focus-visible:ring-2 focus-visible:ring-primary rounded-lg" @click="isMobileMenuOpen = false">
               <div class="w-1.5 h-6 bg-primary rounded-full" />
-              <h1 class="text-2xl font-semibold tracking-tighter text-highlighted">KoKo</h1>
-            </div>
+              <span class="text-2xl font-semibold tracking-tighter text-highlighted">KoKo</span>
+            </NuxtLink>
             <button @click="isMobileMenuOpen = false" class="text-toned hover:text-default cursor-pointer focus:outline-none" aria-label="Close menu">
               <UIcon name="i-solar-close-circle-linear" class="w-6 h-6" />
             </button>
