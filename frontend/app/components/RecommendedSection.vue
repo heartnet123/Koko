@@ -84,16 +84,15 @@ const scroll = (direction: 'left' | 'right') => {
         :to="`/movie/${item.mal_id}`"
         class="w-[calc((100%-20px)/2+20px)] sm:w-[calc((100%-40px)/3+20px)] md:w-[calc((100%-60px)/4+20px)] lg:w-[calc((100%-80px)/5+20px)] flex-shrink-0 snap-start flex flex-col group cursor-pointer relative pl-6"
       >
-        <!-- Giant outline rank number behind the poster -->
+        <!-- Giant rank number behind the poster -->
         <span
-          class="absolute left-0 bottom-8 text-7xl md:text-8xl font-black text-transparent select-none z-10 leading-none pointer-events-none transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-2"
-          style="-webkit-text-stroke: 2px var(--ui-text-toned); opacity: 0.35;"
+          class="absolute left-0 bottom-8 text-7xl md:text-8xl font-bold text-white select-none z-0 leading-none pointer-events-none transition-all duration-300 group-hover:scale-110 group-hover:-translate-y-2"
         >
           {{ idx + 1 }}
         </span>
 
         <!-- Poster Container -->
-        <div class="ml-4 relative rounded-2xl overflow-hidden aspect-[3/4] mb-3 shadow-[0_4px_12px_rgb(0,0,0,0.03)] border border-muted/50 bg-elevated transition-transform duration-500 group-hover:-translate-y-1">
+        <div class="ml-4 relative z-10 rounded-2xl overflow-hidden aspect-[3/4] mb-3 shadow-[0_4px_12px_rgb(0,0,0,0.03)] border border-muted/50 bg-elevated transition-transform duration-500 group-hover:-translate-y-1">
           <NuxtImg
             :src="item.images.jpg.large_image_url || item.images.jpg.image_url"
             :alt="item.title"
