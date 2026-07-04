@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import { ref, watch, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
+import type { LocationQueryValue } from 'vue-router'
 
 const route = useRoute()
 const router = useRouter()
 const search = ref('')
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
+let pendingNavigations = 0
 
-const getQueryString = (q: any): string => {
+const getQueryString = (q: LocationQueryValue | LocationQueryValue[]): string => {
   if (!q) return ''
   return String(Array.isArray(q) ? q[0] : q)
 }
@@ -21,6 +23,7 @@ onMounted(() => {
 
 // Sync from route back to input (e.g. user clicks back button)
 watch(() => route.query.q, (newQ) => {
+  if (pendingNavigations > 0) return
   const qStr = getQueryString(newQ)
   if (qStr !== search.value) {
     search.value = qStr
@@ -32,24 +35,28 @@ watch(search, (newValue, oldValue) => {
   if (debounceTimer) clearTimeout(debounceTimer)
   
   const currentQ = getQueryString(route.query.q)
-  // Prevent navigating if the change came from the route watcher above
   if (newValue === currentQ || (!newValue && !currentQ)) return
 
-  const navigate = () => {
+  const navigate = async () => {
+    pendingNavigations++
     const query = { ...route.query }
     if (newValue) {
       query.q = newValue
     } else {
       delete query.q
     }
-    
-    // reset pagination on new search
     delete query.page
     
-    router.push({ path: '/browse', query })
+    try {
+      await router.push({ path: '/browse', query })
+    } catch (err) {
+      // Ignore navigation abort errors
+    } finally {
+      pendingNavigations--
+    }
   }
 
-  if (route.path !== '/browse') {
+  if (route.path !== '/browse' && pendingNavigations === 0) {
     navigate()
   } else {
     debounceTimer = setTimeout(navigate, 500)
