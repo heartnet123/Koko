@@ -7,28 +7,35 @@ const router = useRouter()
 const search = ref('')
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 
+const getQueryString = (q: any): string => {
+  if (!q) return ''
+  return String(Array.isArray(q) ? q[0] : q)
+}
+
 // Initialize search from route query
 onMounted(() => {
   if (route.query.q) {
-    search.value = route.query.q as string
+    search.value = getQueryString(route.query.q)
   }
 })
 
 // Sync from route back to input (e.g. user clicks back button)
 watch(() => route.query.q, (newQ) => {
-  if (newQ !== search.value) {
-    search.value = (newQ as string) || ''
+  const qStr = getQueryString(newQ)
+  if (qStr !== search.value) {
+    search.value = qStr
   }
 })
 
 // Debounce user input and navigate
 watch(search, (newValue, oldValue) => {
-  // Prevent navigating if the change came from the route watcher above
-  if (newValue === route.query.q || (!newValue && !route.query.q)) return
-
   if (debounceTimer) clearTimeout(debounceTimer)
   
-  debounceTimer = setTimeout(() => {
+  const currentQ = getQueryString(route.query.q)
+  // Prevent navigating if the change came from the route watcher above
+  if (newValue === currentQ || (!newValue && !currentQ)) return
+
+  const navigate = () => {
     const query = { ...route.query }
     if (newValue) {
       query.q = newValue
@@ -40,7 +47,13 @@ watch(search, (newValue, oldValue) => {
     delete query.page
     
     router.push({ path: '/browse', query })
-  }, 500)
+  }
+
+  if (route.path !== '/browse') {
+    navigate()
+  } else {
+    debounceTimer = setTimeout(navigate, 500)
+  }
 })
 
 defineEmits<{
