@@ -21,7 +21,6 @@ Mapped to Nuxt UI `primary` color via `@theme` in `main.css`.
 │  Brand logo                  │  ───────────────  │
 │  Nav items                   │  <slot />         │
 │  User items                  │  (scrollable)     │
-│  Continue Watching widget    │                   │
 └─────────────────────────────────────────────────┘
 ```
 
@@ -50,7 +49,6 @@ Never use raw Tailwind palette colors (`text-gray-*`, `bg-gray-*`).
 ### AppSidebar
 - Fixed 64px wide, sticky, `h-screen`
 - Nav links via `NuxtLink` + `active-class` for active state
-- Continue Watching card at bottom
 
 ### AppHeader
 - Sticky, `h-20`, frosted glass (`bg-[#FCFCFD]/80 backdrop-blur-md`)

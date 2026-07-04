@@ -90,33 +90,6 @@ function Sidebar() {
           a
         ))}
       nav
-
-      { Continue Watching Widget }
-      div className=px-6 mt-auto
-        div className=bg-white rounded-2xl p-4 shadow-[0_2px_12px_-4px_rgba(0,0,0,0.05)] border border-gray-100
-          h3 className=text-sm font-medium text-gray-800 mb-3 tracking-tightContinue Watchingh3
-          div className=relative rounded-xl overflow-hidden mb-3 aspect-video group cursor-pointer
-            img 
-              src=httpsimages.unsplash.comphoto-1518173946687-a4c8892bbd9fq=80&w=400&auto=format&fit=crop 
-              alt=Episode thumbnail
-              className=w-full h-full object-cover transition-transform duration-500 group-hoverscale-105
-            
-            div className=absolute inset-0 bg-black20 flex items-center justify-center opacity-0 group-hoveropacity-100 transition-opacity duration-300
-               div className=w-8 h-8 rounded-full bg-white90 backdrop-blur flex items-center justify-center shadow-lg
-                  iconify-icon icon=solarplay-bold width=16 class=text-[#635BFF] ml-0.5iconify-icon
-               div
-            div
-          div
-          div className=flex justify-between items-baseline mb-1
-            p className=text-sm font-medium text-gray-900 tracking-tightEpisode 4p
-            span className=text-xs text-gray-400 font-medium60%span
-          div
-          p className=text-xs text-gray-400 mb-2Drama • Romancep
-          div className=w-full bg-gray-100 h-1.5 rounded-full overflow-hidden
-            div className=bg-[#635BFF] w-[60%] h-full rounded-fulldiv
-          div
-        div
-      div
     aside
   );
 }

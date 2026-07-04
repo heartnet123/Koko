@@ -1,5 +1,10 @@
 <script setup lang="ts">
+import { computed } from 'vue'
+import { useAuth } from '~/composables/useAuth'
+
 const route = useRoute()
+const auth = useAuth()
+
 const animeId = computed(() => route.params.id)
 const { data: response, status, error } = await useFetch<{ data: any }>(
   () => `http://localhost:8080/api/anime/${animeId.value}`,
@@ -51,6 +56,24 @@ const statCards = computed(() => {
     { label: 'Favorites', value: a.favorites != null ? a.favorites.toLocaleString() : '—', icon: 'i-solar-heart-linear' },
   ]
 })
+
+const isInWatchlist = computed(() => {
+  return anime.value ? auth.inWatchlist(anime.value.mal_id) : false
+})
+
+const toggleWatchlist = async () => {
+  if (!auth.isAuthenticated.value) {
+    navigateTo('/login')
+    return
+  }
+  if (!anime.value) return
+  if (isInWatchlist.value) {
+    await auth.removeFromWatchlist(anime.value.mal_id)
+  } else {
+    const img = anime.value.images?.jpg?.large_image_url || anime.value.images?.jpg?.image_url || ''
+    await auth.addToWatchlist(anime.value.mal_id, anime.value.title_english || anime.value.title, img)
+  }
+}
 </script>
 <template>
   <!-- Loading skeleton -->
@@ -166,14 +189,15 @@ const statCards = computed(() => {
               icon="i-solar-play-bold"
               label="Play Now"
               color="primary"
-              class="rounded-full shadow-lg shadow-primary-500/20 px-6 py-2.5 font-medium"
+              class="rounded-full shadow-lg shadow-primary-500/20 px-6 py-2.5 font-medium cursor-pointer"
             />
             <UButton
-              icon="i-solar-add-circle-linear"
-              label="Watchlist"
+              :icon="isInWatchlist ? 'i-solar-minus-circle-linear' : 'i-solar-add-circle-linear'"
+              :label="isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'"
               color="neutral"
               variant="outline"
-              class="rounded-full bg-white/10 backdrop-blur border-white/20 text-white hover:bg-white/20 px-6 py-2.5 font-medium"
+              class="rounded-full bg-white/10 backdrop-blur border-white/20 text-white hover:bg-white/20 px-6 py-2.5 font-medium cursor-pointer"
+              @click="toggleWatchlist"
             />
           </div>
         </div>

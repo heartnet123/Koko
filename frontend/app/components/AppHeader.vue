@@ -1,13 +1,16 @@
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'
+import { ref, watch, onMounted, computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import type { LocationQueryValue } from 'vue-router'
+import { useAuth } from '~/composables/useAuth'
 
 const route = useRoute()
 const router = useRouter()
 const search = ref('')
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 let pendingNavigations = 0
+
+const auth = useAuth()
 
 const getQueryString = (q: LocationQueryValue | LocationQueryValue[]): string => {
   if (!q) return ''
@@ -31,7 +34,7 @@ watch(() => route.query.q, (newQ) => {
 })
 
 // Debounce user input and navigate
-watch(search, (newValue, oldValue) => {
+watch(search, (newValue) => {
   if (debounceTimer) clearTimeout(debounceTimer)
   
   const currentQ = getQueryString(route.query.q)
@@ -63,6 +66,45 @@ watch(search, (newValue, oldValue) => {
   }
 })
 
+const handleLogout = async () => {
+  await auth.logout()
+  router.push('/login')
+}
+
+// Dropdown items definition for Nuxt UI
+const dropdownItems = computed(() => [
+  [
+    {
+      label: auth.user.value ? `@${auth.user.value.username}` : 'Guest',
+      disabled: true
+    }
+  ],
+  [
+    {
+      label: 'My Profile',
+      icon: 'i-solar-user-linear',
+      to: '/profile'
+    },
+    {
+      label: 'Watchlist',
+      icon: 'i-solar-bookmark-linear',
+      to: '/watchlist'
+    },
+    {
+      label: 'Settings',
+      icon: 'i-solar-settings-linear',
+      to: '/settings'
+    }
+  ],
+  [
+    {
+      label: 'Logout',
+      icon: 'i-solar-logout-linear',
+      onSelect: handleLogout
+    }
+  ]
+])
+
 defineEmits<{
   (e: 'toggle-menu'): void
 }>()
@@ -73,7 +115,7 @@ defineEmits<{
     <!-- Left Menu Trigger & Search -->
     <div class="flex items-center gap-3 w-full max-w-lg">
       <UButton
-        icon="i-solar-menu-hamburger-linear"
+        icon="i-solar-hamburger-menu-linear"
         color="neutral"
         variant="ghost"
         class="lg:hidden rounded-full cursor-pointer focus:outline-none"
@@ -105,12 +147,29 @@ defineEmits<{
         class="rounded-full"
         aria-label="Notifications"
       />
-      <UAvatar
-        src="https://i.pravatar.cc/40"
-        alt="User avatar"
-        size="sm"
-        class="cursor-pointer ring-2 ring-primary/20 hover:ring-primary/50 transition-all"
-      />
+      
+      <ClientOnly>
+        <!-- Logged In User Avatar Dropdown -->
+        <UDropdownMenu v-if="auth.isAuthenticated.value" :items="dropdownItems" :content="{ align: 'end', side: 'bottom' }">
+          <UAvatar
+            :src="auth.user.value?.avatar_url || 'https://i.pravatar.cc/40'"
+            alt="User avatar"
+            size="sm"
+            class="cursor-pointer ring-2 ring-primary/20 hover:ring-primary/50 transition-all"
+          />
+        </UDropdownMenu>
+
+        <!-- Logged Out Sign In Button -->
+        <UButton
+          v-else
+          to="/login"
+          label="Sign In"
+          color="primary"
+          size="sm"
+          icon="i-solar-login-linear"
+          class="rounded-full shadow-md shadow-primary/10 cursor-pointer font-medium"
+        />
+      </ClientOnly>
     </div>
   </header>
 </template>
