@@ -31,4 +31,5 @@ backend/server.exe
 .codegraph/
 .superpowers/
 docs/
+graphify-out/
 

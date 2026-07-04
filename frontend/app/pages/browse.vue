@@ -12,6 +12,7 @@ const { genreIds } = useGenreQuery()
 const route = useRoute()
 const genreName = computed(() => route.query.genre_name as string)
 const orderBy = computed(() => (route.query.order_by as string) || 'popularity')
+const searchQuery = computed(() => route.query.q as string)
 
 const { data: genresResponse } = await useFetch<{ data: Genre[] }>(
   'http://localhost:8080/api/genres',
@@ -50,6 +51,7 @@ const removeGenre = (genreId: number) => {
   
   delete query.genre
   delete query.genre_name
+  delete query.page
   
   navigateTo({
     path: route.path,
@@ -57,11 +59,31 @@ const removeGenre = (genreId: number) => {
   })
 }
 
-const { data: response, status } = await useFetch<{ data: Anime[] }>(
+const limit = 25
+const page = computed(() => {
+  const p = Number(route.query.page)
+  return Number.isInteger(p) && p > 0 ? p : 1
+})
+
+interface Pagination {
+  last_visible_page: number
+  has_next_page: boolean
+  current_page: number
+  items: {
+    count: number
+    total: number
+    per_page: number
+  }
+}
+
+const { data: response, status } = await useFetch<{ data: Anime[], pagination?: Pagination }>(
   () => {
-    let url = 'http://localhost:8080/api/anime?limit=24'
+    let url = `http://localhost:8080/api/anime?limit=${limit}&page=${page.value}`
     if (genreIds.value.length > 0) {
       url += `&genres=${genreIds.value.join(',')}`
+    }
+    if (searchQuery.value) {
+      url += `&q=${encodeURIComponent(searchQuery.value)}`
     }
     if (orderBy.value) {
       url += `&order_by=${orderBy.value}`
@@ -75,9 +97,39 @@ const { data: response, status } = await useFetch<{ data: Anime[] }>(
   }
 )
 const animes = computed(() => response.value?.data ?? [])
+const pagination = computed(() => response.value?.pagination)
+const pageCount = computed(() => pagination.value?.last_visible_page ?? page.value)
 const loading = computed(() => status.value === 'pending')
+const isFirstPage = computed(() => page.value <= 1)
+const isLastPage = computed(() => page.value >= pageCount.value)
+const hasNextPage = computed(() => pagination.value?.has_next_page ?? animes.value.length === limit)
+
+const setPage = (targetPage: number) => {
+  const nextPage = Math.min(Math.max(targetPage, 1), pageCount.value)
+  if (nextPage === page.value) return
+
+  const query = { ...route.query }
+  if (nextPage === 1) {
+    delete query.page
+  } else {
+    query.page = String(nextPage)
+  }
+
+  navigateTo({ path: route.path, query })
+  if (typeof window !== 'undefined') {
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+
+const firstPage = () => setPage(1)
+const prevPage = () => setPage(page.value - 1)
+const nextPage = () => {
+  if (hasNextPage.value) setPage(page.value + 1)
+}
+const lastPage = () => setPage(pageCount.value)
 
 const headerText = computed(() => {
+  if (searchQuery.value) return `Search Results for "${searchQuery.value}"`
   const count = genreIds.value.length
   if (count === 0) return 'Popular Anime'
   if (count === 1 && genreName.value) return `Explore ${genreName.value}`
@@ -85,6 +137,7 @@ const headerText = computed(() => {
 })
 
 const subtitleText = computed(() => {
+  if (searchQuery.value) return 'Showing anime matching your search.'
   const count = genreIds.value.length
   if (count === 0) return 'Showing collections matching your query.'
   if (count === 1) return 'Showing collections matching 1 active filter.'
@@ -166,13 +219,55 @@ const subtitleText = computed(() => {
               :alt="item.title"
               class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
             />
-            <div class="absolute bottom-3 left-3 w-8 h-8 rounded-full bg-white/90 backdrop-blur shadow-sm flex items-center justify-center opacity-90 group-hover:opacity-100 group-hover:scale-110 transition-all">
-              <UIcon name="i-solar-play-bold" class="w-3.5 h-3.5 ml-0.5 text-highlighted" />
-            </div>
           </div>
           <h4 class="text-sm font-medium text-highlighted tracking-tight truncate">{{ item.title }}</h4>
           <p class="text-xs text-toned mt-0.5">{{ item.type ?? 'Anime' }}</p>
         </NuxtLink>
+      </div>
+    </div>
+
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
+      <div class="flex items-center gap-2">
+        <UButton
+          :disabled="isFirstPage"
+          variant="ghost"
+          icon="i-solar-double-alt-arrow-left-linear"
+          @click="firstPage"
+        >
+          First
+        </UButton>
+        <UButton
+          :disabled="isFirstPage"
+          variant="ghost"
+          icon="i-solar-alt-arrow-left-linear"
+          @click="prevPage"
+        >
+          Previous
+        </UButton>
+      </div>
+
+      <p class="text-sm text-toned px-2">
+        Page <span class="font-semibold text-highlighted">{{ page }}</span> of
+        <span class="font-semibold text-highlighted">{{ pageCount }}</span>
+      </p>
+
+      <div class="flex items-center gap-2">
+        <UButton
+          :disabled="!hasNextPage"
+          variant="ghost"
+          trailing-icon="i-solar-alt-arrow-right-linear"
+          @click="nextPage"
+        >
+          Next
+        </UButton>
+        <UButton
+          :disabled="isLastPage"
+          variant="ghost"
+          trailing-icon="i-solar-double-alt-arrow-right-linear"
+          @click="lastPage"
+        >
+          Last
+        </UButton>
       </div>
     </div>
   </div>

@@ -32,7 +32,7 @@ const infoRows = computed(() => {
   const a = anime.value
   return [
     { label: 'Type', value: a.type, icon: 'i-solar-tv-linear' },
-    { label: 'Episodes', value: a.episodes ?? '—', icon: 'i-solar-playlist-minimalistic-linear' },
+    { label: 'Episodes', value: a.episodes ?? '—', icon: 'i-solar-play-linear' },
     { label: 'Status', value: a.status, icon: 'i-solar-clock-circle-linear' },
     { label: 'Aired', value: a.aired?.string ?? '—', icon: 'i-solar-calendar-linear' },
     { label: 'Duration', value: a.duration, icon: 'i-solar-stopwatch-linear' },
@@ -105,8 +105,8 @@ const statCards = computed(() => {
         class="absolute inset-0 w-full h-full object-cover object-top scale-105 blur-sm opacity-30"
       />
       <!-- Gradient overlays -->
-      <div class="absolute inset-0 bg-gradient-to-r from-[#2C2F33] via-[#2C2F33]/90 to-[#2C2F33]/30" />
-      <div class="absolute inset-0 bg-gradient-to-t from-[#2C2F33]/70 via-transparent to-transparent" />
+      <div class="absolute inset-0 bg-gradient-to-r from-default via-default/90 to-default/30" />
+      <div class="absolute inset-0 bg-gradient-to-t from-default/70 via-transparent to-transparent" />
       <!-- Hero content -->
       <div class="relative h-full flex items-center gap-8 px-10">
         <!-- Poster -->
@@ -297,7 +297,7 @@ const statCards = computed(() => {
             <div
               v-for="stat in statCards"
               :key="stat.label"
-              class="bg-[#2C2F33] rounded-xl p-3 text-center hover:bg-primary-500/10 transition-colors"
+              class="bg-default/50 rounded-xl p-3 text-center hover:bg-primary-500/10 transition-colors border border-muted/20"
             >
               <UIcon :name="stat.icon" class="w-4.5 h-4.5 text-primary-400 mb-1" />
               <p class="text-sm font-semibold text-highlighted">{{ stat.value }}</p>
@@ -351,7 +351,7 @@ const statCards = computed(() => {
             <span
               v-for="prod in anime.producers"
               :key="prod.mal_id"
-              class="text-xs text-toned bg-[#2C2F33] px-3 py-1.5 rounded-xl border border-muted"
+              class="text-xs text-toned bg-default/50 px-3 py-1.5 rounded-xl border border-muted"
             >
               {{ prod.name }}
             </span>
@@ -370,7 +370,7 @@ const statCards = computed(() => {
             <span
               v-for="tag in [...(anime.genres || []), ...(anime.themes || []), ...(anime.demographics || [])]"
               :key="tag.mal_id"
-              class="text-xs font-medium text-toned bg-[#2C2F33] px-3 py-1.5 rounded-full border border-muted hover:border-primary-500/30 hover:text-primary-400 transition-colors cursor-default"
+              class="text-xs font-medium text-toned bg-default/50 px-3 py-1.5 rounded-full border border-muted hover:border-primary-500/30 hover:text-primary-400 transition-colors cursor-default"
             >
               {{ tag.name }}
             </span>
