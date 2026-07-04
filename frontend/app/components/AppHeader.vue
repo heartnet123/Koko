@@ -1,5 +1,48 @@
 <script setup lang="ts">
+import { ref, watch, onMounted } from 'vue'
+import { useRoute, useRouter } from 'vue-router'
+
+const route = useRoute()
+const router = useRouter()
 const search = ref('')
+let debounceTimer: ReturnType<typeof setTimeout> | null = null
+
+// Initialize search from route query
+onMounted(() => {
+  if (route.query.q) {
+    search.value = route.query.q as string
+  }
+})
+
+// Sync from route back to input (e.g. user clicks back button)
+watch(() => route.query.q, (newQ) => {
+  if (newQ !== search.value) {
+    search.value = (newQ as string) || ''
+  }
+})
+
+// Debounce user input and navigate
+watch(search, (newValue, oldValue) => {
+  // Prevent navigating if the change came from the route watcher above
+  if (newValue === route.query.q || (!newValue && !route.query.q)) return
+
+  if (debounceTimer) clearTimeout(debounceTimer)
+  
+  debounceTimer = setTimeout(() => {
+    const query = { ...route.query }
+    if (newValue) {
+      query.q = newValue
+    } else {
+      delete query.q
+    }
+    
+    // reset pagination on new search
+    delete query.page
+    
+    router.push({ path: '/browse', query })
+  }, 500)
+})
+
 defineEmits<{
   (e: 'toggle-menu'): void
 }>()
