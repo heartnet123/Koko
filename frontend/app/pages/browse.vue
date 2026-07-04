@@ -12,6 +12,7 @@ const { genreIds } = useGenreQuery()
 const route = useRoute()
 const genreName = computed(() => route.query.genre_name as string)
 const orderBy = computed(() => (route.query.order_by as string) || 'popularity')
+const searchQuery = computed(() => route.query.q as string)
 
 const { data: genresResponse } = await useFetch<{ data: Genre[] }>(
   'http://localhost:8080/api/genres',
@@ -81,6 +82,9 @@ const { data: response, status } = await useFetch<{ data: Anime[], pagination?: 
     if (genreIds.value.length > 0) {
       url += `&genres=${genreIds.value.join(',')}`
     }
+    if (searchQuery.value) {
+      url += `&q=${encodeURIComponent(searchQuery.value)}`
+    }
     if (orderBy.value) {
       url += `&order_by=${orderBy.value}`
     }
@@ -125,6 +129,7 @@ const nextPage = () => {
 const lastPage = () => setPage(pageCount.value)
 
 const headerText = computed(() => {
+  if (searchQuery.value) return `Search Results for "${searchQuery.value}"`
   const count = genreIds.value.length
   if (count === 0) return 'Popular Anime'
   if (count === 1 && genreName.value) return `Explore ${genreName.value}`
@@ -132,6 +137,7 @@ const headerText = computed(() => {
 })
 
 const subtitleText = computed(() => {
+  if (searchQuery.value) return 'Showing anime matching your search.'
   const count = genreIds.value.length
   if (count === 0) return 'Showing collections matching your query.'
   if (count === 1) return 'Showing collections matching 1 active filter.'
