@@ -42,3 +42,57 @@ html, body {
   font-family: var(--font-sans);
   transition: background-color 0.2s ease, color 0.2s ease;
 }
+
+/* Ken Burns animation */
+@keyframes kenburns {
+  0% {
+    transform: scale(1) translate(0, 0);
+  }
+  50% {
+    transform: scale(1.08) translate(-0.5%, -0.5%);
+  }
+  100% {
+    transform: scale(1) translate(0, 0);
+  }
+}
+
+.animate-kenburns {
+  animation: kenburns 32s ease infinite;
+}
+
+/* Shimmer animation */
+@keyframes shimmer-gradient {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.animate-shimmer-gradient {
+  background: linear-gradient(90deg, var(--ui-bg-elevated) 25%, var(--ui-border-muted) 50%, var(--ui-bg-elevated) 75%);
+  background-size: 200% 100%;
+  animation: shimmer-gradient 1.5s infinite linear;
+}
+
+/* Hide scrollbar utility */
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
+}
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;  /* Chrome, Safari and Opera */
+}
+
+/* Prefers-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .animate-kenburns {
+    animation: none !important;
+    transform: none !important;
+  }
+  .animate-shimmer-gradient {
+    animation: none !important;
+    background: var(--ui-bg-elevated) !important;
+  }
+}

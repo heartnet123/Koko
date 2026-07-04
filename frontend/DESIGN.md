@@ -94,16 +94,75 @@ No auth required. Rate limit: ~3 req/s.
 ```
 app/
 ├── app.vue                          # UApp shell
-├── assets/css/main.css              # Tailwind + Nuxt UI + @theme brand
+├── assets/css/main.css              # Tailwind + Nuxt UI + @theme brand + custom animations
 ├── layouts/
 │   └── default.vue                  # AppSidebar + AppHeader shell
 ├── pages/
-│   └── index.vue                    # Composes Hero + Recommended + Genre
+│   └── index.vue                    # Composes HeroCarousel + AnimeRail list
+├── composables/
+│   ├── useAuth.ts                   # Auth + watchlist management
+│   ├── useJikan.ts                  # Fetch wrapper for Jikan proxy with retry logic
+│   └── useGenreQuery.ts             # Genre routing query parser
 └── components/
     ├── AppSidebar.vue
     ├── AppHeader.vue
-    ├── HeroSection.vue
-    ├── RecommendedSection.vue
-    ├── GenreSection.vue
-    └── GenreRow.vue
+    ├── AnimeCard.vue                # Portrait aspect-[2/3] card
+    ├── AnimeRail.vue                # Lazy horizontal anime scroller
+    ├── HeroCarousel.vue             # Autoplay Ken Burns carousel
+    └── skeletons/
+        ├── HeroSkeleton.vue         # Shimmer skeleton for Hero
+        └── RailSkeleton.vue         # Shimmer skeleton for AnimeRail
 ```
+
+---
+
+## Minimal Redesign
+
+### Decision Log
+1. **Skeletons Isolation**: Skeletons are modularized inside `skeletons/` to avoid component clutter.
+2. **Hero Datasource**: `/seasons/now` endpoint is mapped in backend to load current airing titles for the hero carousel.
+3. **useJikan Composable**: Crafted a clean utility using native Vue refs and `$fetch` supporting automatic retry logic.
+4. **Ken Burns Motion**: Defined pure CSS scale/translate keyframes for smooth hardware-accelerated movements.
+5. **Shimmer Gradients**: Created a linear-gradient keyframe animation on background positioning for skeletons.
+6. **Horizontal Scrolling**: Implemented touch-smooth horizontal scroll container utilizing Tailwind's `snap-x` and browser scrollbar hiding.
+7. **Lazy Fetching via intersection**: Utilized VueUse's `useIntersectionObserver` to trigger network request only when scroller enters viewport (rootMargin: '200px').
+8. **Item De-duplication**: Embedded set-based filtering on `mal_id`s within rails to clean up API results.
+9. **Retry Mechanisms**: Provided direct click callbacks on error states to let users reload individual failed categories.
+10. **Autoplay Timing**: Programmed 8-second rotation cycles for Hero slide intervals.
+11. **Autoplay Pause Override**: Implemented timeout overrides that pause auto-rotation for 10 seconds on dot interactions.
+12. **Hero Transitions**: Wrapped slides in Vue `<Transition name="hero-fade">` to smoothly blend layouts.
+13. **Watchlist State Matching**: Wired bookmarks directly to the `inWatchlist(id)` getter inside `useAuth()`.
+14. **Watchlist Flow Protection**: Programmed automatic redirection to `/login` inside card bookmarks when unauthenticated.
+15. **Staggered Page Load**: Applied stagger delays to the categories list to introduce rails with visual flow.
+16. **Prefers Reduced Motion Support**: Applied a CSS media query that overrides both `@keyframes` animations when OS preference is active.
+
+### Architecture
+
+```mermaid
+graph TD
+  Index[index.vue Orchestrator] -->|Loads immediate| HeroSkel[HeroSkeleton]
+  Index -->|Loads immediate| Hero[HeroCarousel]
+  Index -->|Loads staggered| Rails[AnimeRails]
+  
+  Hero -->|Watchlist state| Auth[useAuth Composable]
+  Hero -->|Renders slides| Card[AnimeCard]
+  Rails -->|Viewport Intersect| useJikan[useJikan Fetcher]
+  Rails -->|Renders items| Card
+  Card -->|Route Link| Details[/movie/:id Details Page]
+```
+
+### Component Responsibilities
+- `HeroCarousel.vue`: Handles image scale animation, automatic 8s interval timer, dot buttons, and watchlist sync.
+- `AnimeRail.vue`: Orchestrates intersection observer, lazy loads details, displays slider chevrons, and lists card nodes.
+- `AnimeCard.vue`: Renders score chip, title info, type/year metadata, and provides the redirect route.
+
+### Manual Smoke Test Steps
+1. Load home page: Verify shimmer skeleton placeholder is displayed.
+2. Hero slide loading: Ensure the first slide loads and begins Ken Burns panning.
+3. Rotation verification: Confirm the carousel rotates to slide 2 after 8s.
+4. Pause check: Click slide indicator 4, confirm transition, and ensure the rotation halts for 10s.
+5. Lazy intersection test: Scroll down. Confirm in network logs that rails query endpoints only when visible.
+6. Watchlist redirect check: Log out. Click "Watchlist" on Hero. Confirm it redirects to `/login`.
+7. Card click verification: Click any anime poster to ensure redirection to `/movie/[id]`.
+8. Reduced motion: Enable reduced-motion in system settings. Confirm Ken Burns and skeleton shimmer animations freeze.
+9. Error retry test: Trigger a mock 429 rate limit. Verify "Retry" button renders and recovers successfully on click.

@@ -714,12 +714,18 @@ func main() {
 		fetchAndCache(c, cache, targetURL)
 	})
 
+	r.GET("/api/seasons/now", func(c *gin.Context) {
+		targetURL := "https://api.jikan.moe/v4/seasons/now"
+		fetchAndCache(c, cache, targetURL)
+	})
+
 	r.GET("/api/anime", func(c *gin.Context) {
 		genres := c.Query("genres")
 		q := c.Query("q")
 		page := c.Query("page")
 		orderBy := c.Query("order_by")
 		limit := c.Query("limit")
+		sort := c.Query("sort")
 
 		u, err := url.Parse("https://api.jikan.moe/v4/anime")
 		if err != nil {
@@ -745,6 +751,9 @@ func main() {
 			qParams.Set("order_by", orderBy)
 		} else {
 			qParams.Set("order_by", "popularity")
+		}
+		if sort != "" {
+			qParams.Set("sort", sort)
 		}
 
 		u.RawQuery = qParams.Encode()
