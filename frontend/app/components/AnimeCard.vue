@@ -37,7 +37,7 @@ const handleToggleWatchlist = async (e: Event) => {
     class="flex-shrink-0 snap-start flex flex-col group cursor-pointer w-[160px] md:w-[185px] transition-transform duration-300 hover:-translate-y-1.5"
   >
     <!-- Poster Container with Glass Border & Spotlight Glow -->
-    <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-surface border border-[var(--glass-border)] shadow-md group-hover:shadow-[0_12px_30px_rgba(0,220,130,0.25)] group-hover:border-primary-400/50 transition-all duration-300">
+    <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-surface border border-[var(--glass-border)] shadow-[var(--shadow-diffuse)] group-hover:shadow-[var(--shadow-diffuse-accent)] group-hover:border-primary-400/50 transition-all duration-300">
       <NuxtImg
         v-if="anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url"
         :src="anime.images.jpg.large_image_url || anime.images.jpg.image_url"
@@ -54,7 +54,7 @@ const handleToggleWatchlist = async (e: Event) => {
         v-if="anime.score" 
         class="absolute top-2.5 right-2.5 glass-chip text-white font-mono text-[10px] px-2 py-0.5 rounded-lg flex items-center gap-1 z-10 shadow-sm"
       >
-        <UIcon name="i-solar-star-bold" class="w-3 h-3 text-yellow-400" />
+        <UIcon name="i-solar-star-bold" class="w-3 h-3 text-[var(--rank-gold)]" />
         <span>{{ Number(anime.score).toFixed(1) }}</span>
       </div>
 

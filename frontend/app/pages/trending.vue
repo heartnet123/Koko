@@ -145,7 +145,7 @@ const getRankBadgeClass = (rank: number) => {
             :to="`/movie/${item.mal_id}`"
             class="flex flex-col w-full transition-transform duration-300 hover:-translate-y-1.5"
           >
-            <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-surface border border-[var(--glass-border)] shadow-md group-hover:shadow-[0_12px_30px_rgba(0,220,130,0.25)] group-hover:border-primary-400/50 transition-all duration-300">
+            <div class="relative aspect-[2/3] w-full rounded-2xl overflow-hidden glass-surface border border-[var(--glass-border)] shadow-[var(--shadow-diffuse)] group-hover:shadow-[var(--shadow-diffuse-accent)] group-hover:border-primary-400/50 transition-all duration-300">
               <NuxtImg
                 :src="item.images.jpg.large_image_url || item.images.jpg.image_url"
                 :alt="item.title"
@@ -159,7 +159,7 @@ const getRankBadgeClass = (rank: number) => {
                 v-if="item.score" 
                 class="absolute top-2.5 right-2.5 glass-chip text-white font-mono text-[10px] px-2 py-0.5 rounded-lg flex items-center gap-1 z-10"
               >
-                <UIcon name="i-solar-star-bold" class="w-3 h-3 text-yellow-400" />
+                <UIcon name="i-solar-star-bold" class="w-3 h-3 text-[var(--rank-gold)]" />
                 <span>{{ Number(item.score).toFixed(1) }}</span>
               </div>
             </div>

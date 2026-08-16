@@ -66,7 +66,7 @@ const handleRemove = async (animeId: number) => {
       <div
         v-for="item in auth.watchlist.value"
         :key="item.anime_id"
-        class="group relative glass-surface border border-[var(--glass-border)] rounded-2xl overflow-hidden shadow-md hover:shadow-[0_12px_30px_rgba(0,220,130,0.25)] hover:border-primary-400/50 transition-all duration-300 flex flex-col h-full hover:-translate-y-1.5"
+        class="group relative glass-surface border border-[var(--glass-border)] rounded-2xl overflow-hidden shadow-[var(--shadow-diffuse)] hover:shadow-[var(--shadow-diffuse-accent)] hover:border-primary-400/50 transition-all duration-300 flex flex-col h-full hover:-translate-y-1.5"
       >
         <!-- Card Poster Wrapper -->
         <NuxtLink

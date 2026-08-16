@@ -137,7 +137,7 @@ defineEmits<{
           type="search"
           placeholder="Search anime, genres, studios..."
           aria-label="Search anime, genres, studios"
-          class="w-full pl-11 pr-16 py-2.5 glass-pill rounded-xl text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all"
+          class="w-full pl-11 pr-16 py-2.5 glass-pill rounded-xl text-sm text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all"
         />
         <div class="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-0.5 text-[10px] font-mono text-[var(--ui-text-toned)] bg-[var(--ui-overlay)]/20 dark:bg-white/10 px-1.5 py-0.5 rounded border border-white/10 pointer-events-none">
           <span class="text-[9px]">⌘</span>K

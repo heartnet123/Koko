@@ -85,7 +85,7 @@ onUnmounted(() => {
             <!-- Glass Metadata Badges -->
             <div class="flex flex-wrap items-center gap-2 text-xs font-semibold">
               <span v-if="activeSlide.score" class="glass-chip text-[var(--rank-gold)] px-2.5 py-1 rounded-lg flex items-center gap-1.5 font-mono shadow-sm">
-                <UIcon name="i-solar-star-bold" class="w-3.5 h-3.5 text-yellow-400" />
+                <UIcon name="i-solar-star-bold" class="w-3.5 h-3.5 text-[var(--rank-gold)]" />
                 {{ Number(activeSlide.score).toFixed(1) }}
               </span>
               <span v-if="activeSlide.type" class="glass-chip text-[var(--ui-text-on-image)] px-2.5 py-1 rounded-lg uppercase tracking-wider text-[11px]">
@@ -100,7 +100,7 @@ onUnmounted(() => {
             </div>
 
             <!-- Title -->
-            <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight drop-shadow-[var(--shadow-diffuse)]">
+            <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight drop-shadow-md">
               {{ activeSlide.title_english || activeSlide.title }}
             </h2>
             
