@@ -111,7 +111,7 @@ const formatDate = (dateStr?: string) => {
           <div>
             <h3 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight mb-1 border-b border-[var(--glass-border-subtle)] pb-3">Account Details</h3>
           </div>
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-5 font-mono">
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
             <div class="glass-pill p-4 rounded-2xl">
               <span class="text-[10px] text-[var(--ui-text-toned)] uppercase tracking-wider font-bold block mb-1">Username</span>
               <span class="text-xs font-bold text-[var(--ui-text-highlighted)]">@{{ auth.user.value.username }}</span>

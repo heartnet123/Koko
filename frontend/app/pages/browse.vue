@@ -197,7 +197,7 @@ const subtitleText = computed(() => {
       >
         <div class="flex items-center gap-3 glass-surface-elevated border border-[var(--glass-border)] px-5 py-3 rounded-2xl shadow-[var(--shadow-diffuse-lg)]">
           <UIcon name="i-solar-spinner-linear" class="w-5 h-5 animate-spin text-primary-400" />
-          <span class="text-xs font-bold text-[var(--ui-text-highlighted)] font-mono">Fetching catalog...</span>
+          <span class="text-xs font-bold text-[var(--ui-text-highlighted)] ">Fetching catalog...</span>
         </div>
       </div>
 

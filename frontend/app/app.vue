@@ -2,7 +2,7 @@
   <UApp>
     <NuxtRouteAnnouncer />
     <NuxtLayout>
-      <NuxtPage />
+      <NuxtPage transition="page" />
     </NuxtLayout>
   </UApp>
 </template>

@@ -103,7 +103,7 @@ const handleSave = async () => {
           <p class="text-xs text-[var(--ui-text-toned)] text-center font-mono">Avatar Preview</p>
         </div>
 
-        <div class="flex-1 w-full flex flex-col gap-5 font-mono">
+        <div class="flex-1 w-full flex flex-col gap-5">
           <div>
             <label for="display-name" class="text-[10px] text-[var(--ui-text-toned)] uppercase tracking-wider font-bold block mb-1.5">Display Name</label>
             <input
@@ -168,7 +168,7 @@ const handleSave = async () => {
       </div>
 
       <p v-if="saveError" class="text-xs text-[var(--ui-error)] font-mono font-bold">{{ saveError }}</p>
-      <p v-if="saveSuccess" class="text-xs text-green-400 font-mono font-bold">Settings saved successfully.</p>
+      <p v-if="saveSuccess" class="text-xs text-[var(--ui-success)] font-mono font-bold">Settings saved successfully.</p>
 
       <div class="flex justify-end gap-3 border-t border-[var(--glass-border-subtle)] pt-6">
         <UButton

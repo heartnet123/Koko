@@ -79,12 +79,14 @@ const menuItems = [
                 color="neutral"
                 class="rounded-full font-semibold cursor-pointer hover:bg-white/10"
               />
-              <UButton
-                to="/login"
-                label="Get Started"
-                color="primary"
-                class="rounded-full font-bold shadow-[var(--shadow-diffuse-accent)] px-6 cursor-pointer"
-              />
+              <span v-magnetic class="inline-block transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform">
+                <UButton
+                  to="/login"
+                  label="Get Started"
+                  color="primary"
+                  class="rounded-full font-bold shadow-[var(--shadow-diffuse-accent)] px-6 cursor-pointer"
+                />
+              </span>
             </div>
           </ClientOnly>
         </div>

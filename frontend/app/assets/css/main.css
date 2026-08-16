@@ -295,13 +295,30 @@ html, body {
   animation: breathe 2.4s ease-in-out infinite;
 }
 
+/* Page transitions */
+.page-enter-active,
+.page-leave-active {
+  transition: opacity 0.3s ease, transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.page-enter-from {
+  opacity: 0;
+  transform: translateY(10px);
+}
+.page-leave-to {
+  opacity: 0;
+  transform: translateY(-6px);
+}
+
 /* Prefers-reduced-motion */
 @media (prefers-reduced-motion: reduce) {
   .animate-kenburns,
   .animate-fade-in-up,
   .animate-breathe,
-  .animate-glass-shimmer::after {
+  .animate-glass-shimmer::after,
+  .page-enter-active,
+  .page-leave-active {
     animation: none !important;
+    transition: none !important;
     transform: none !important;
   }
 }

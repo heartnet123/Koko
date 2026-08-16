@@ -92,7 +92,7 @@ const whyItems = [
           <!-- Copy & CTAs -->
           <div class="lg:col-span-5 flex flex-col gap-6 md:gap-8 justify-center text-left">
             <div class="inline-flex items-center gap-2 glass-pill px-3 py-1 rounded-full w-fit">
-              <span class="w-2 h-2 rounded-full bg-primary-400 animate-pulse" />
+              <span class="w-2 h-2 rounded-full bg-primary-400 animate-breathe" />
               <span class="text-xs font-bold text-primary-400 tracking-wider uppercase font-mono">v4.0 Glass Edition</span>
             </div>
 
@@ -106,14 +106,16 @@ const whyItems = [
               Catalog series, track your watchlist, and explore collections in a stunning glassmorphic interface engineered for anime enthusiasts.
             </p>
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-2">
-              <UButton
-                to="/login"
-                label="Get Started Free"
-                size="lg"
-                color="primary"
-                icon="i-solar-rocket-bold"
-                class="rounded-2xl font-bold shadow-[var(--shadow-diffuse-accent)] px-8 py-3.5 text-center justify-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
-              />
+              <span v-magnetic class="inline-block transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform">
+                <UButton
+                  to="/login"
+                  label="Get Started Free"
+                  size="lg"
+                  color="primary"
+                  icon="i-solar-rocket-bold"
+                  class="rounded-2xl font-bold shadow-[var(--shadow-diffuse-accent)] px-8 py-3.5 text-center justify-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+                />
+              </span>
               <UButton
                 to="/browse"
                 label="Browse Library"
@@ -348,13 +350,15 @@ const whyItems = [
             Join KoKo today. Organize your collection, discover new seasons, and enjoy a clean cinematic interface.
           </p>
           <div class="flex flex-col sm:flex-row items-center gap-4 mt-2">
-            <UButton
-              to="/login"
-              label="Join KoKo"
-              size="lg"
-              color="primary"
-              class="rounded-2xl font-bold shadow-[var(--shadow-diffuse-accent)] px-8 py-3.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
-            />
+            <span v-magnetic class="inline-block transition-transform duration-300 ease-[cubic-bezier(0.16,1,0.3,1)] will-change-transform">
+              <UButton
+                to="/login"
+                label="Join KoKo"
+                size="lg"
+                color="primary"
+                class="rounded-2xl font-bold shadow-[var(--shadow-diffuse-accent)] px-8 py-3.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+              />
+            </span>
             <UButton
               to="/browse"
               label="Browse Library First"

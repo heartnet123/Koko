@@ -106,7 +106,7 @@ const handleRegister = async () => {
         </div>
 
         <!-- Alert Error Message -->
-        <div v-if="errorMsg" class="mb-6 p-4 rounded-2xl bg-[var(--ui-error)]/10 border border-[var(--ui-error)]/30 text-[var(--ui-error)] text-xs flex items-center gap-3 font-mono">
+        <div v-if="errorMsg" class="mb-6 p-4 rounded-2xl bg-[var(--ui-error)]/10 border border-[var(--ui-error)]/30 text-[var(--ui-error)] text-xs flex items-center gap-3">
           <UIcon name="i-solar-danger-circle-bold-duotone" class="w-5 h-5 flex-shrink-0" />
           <span>{{ errorMsg }}</span>
         </div>
@@ -114,7 +114,7 @@ const handleRegister = async () => {
         <!-- Login Form -->
         <form v-if="isLoginMode" @submit.prevent="handleLogin" class="flex flex-col gap-4">
           <div class="flex flex-col gap-1.5">
-            <label for="login-email" class="text-xs font-bold text-[var(--ui-text-highlighted)] font-mono">Email or Username</label>
+            <label for="login-email" class="text-xs font-bold text-[var(--ui-text-highlighted)] ">Email or Username</label>
             <div class="relative group">
               <UIcon name="i-solar-letter-linear" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ui-text-toned)] group-focus-within:text-primary-400 transition-colors pointer-events-none" />
               <input
@@ -123,13 +123,13 @@ const handleRegister = async () => {
                 type="text"
                 required
                 placeholder="Enter your email or username"
-                class="w-full pl-11 pr-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all font-mono"
+                class="w-full pl-11 pr-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all"
               />
             </div>
           </div>
 
           <div class="flex flex-col gap-1.5">
-            <label for="login-password" class="text-xs font-bold text-[var(--ui-text-highlighted)] font-mono">Password</label>
+            <label for="login-password" class="text-xs font-bold text-[var(--ui-text-highlighted)] ">Password</label>
             <div class="relative group">
               <UIcon name="i-solar-lock-linear" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ui-text-toned)] group-focus-within:text-primary-400 transition-colors pointer-events-none" />
               <input
@@ -138,7 +138,7 @@ const handleRegister = async () => {
                 type="password"
                 required
                 placeholder="••••••••"
-                class="w-full pl-11 pr-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all font-mono"
+                class="w-full pl-11 pr-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all"
               />
             </div>
           </div>
@@ -156,7 +156,7 @@ const handleRegister = async () => {
         <!-- Register Form -->
         <form v-else @submit.prevent="handleRegister" class="flex flex-col gap-4">
           <div class="flex flex-col gap-1.5">
-            <label for="register-username" class="text-xs font-bold text-[var(--ui-text-highlighted)] font-mono">Username</label>
+            <label for="register-username" class="text-xs font-bold text-[var(--ui-text-highlighted)] ">Username</label>
             <div class="relative group">
               <UIcon name="i-solar-user-linear" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ui-text-toned)] group-focus-within:text-primary-400 transition-colors pointer-events-none" />
               <input
@@ -165,13 +165,13 @@ const handleRegister = async () => {
                 type="text"
                 required
                 placeholder="Choose a username"
-                class="w-full pl-11 pr-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all font-mono"
+                class="w-full pl-11 pr-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all"
               />
             </div>
           </div>
 
           <div class="flex flex-col gap-1.5">
-            <label for="register-email" class="text-xs font-bold text-[var(--ui-text-highlighted)] font-mono">Email Address</label>
+            <label for="register-email" class="text-xs font-bold text-[var(--ui-text-highlighted)] ">Email Address</label>
             <div class="relative group">
               <UIcon name="i-solar-letter-linear" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ui-text-toned)] group-focus-within:text-primary-400 transition-colors pointer-events-none" />
               <input
@@ -180,13 +180,13 @@ const handleRegister = async () => {
                 type="email"
                 required
                 placeholder="Enter your email"
-                class="w-full pl-11 pr-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all font-mono"
+                class="w-full pl-11 pr-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all"
               />
             </div>
           </div>
 
           <div class="flex flex-col gap-1.5">
-            <label for="register-password" class="text-xs font-bold text-[var(--ui-text-highlighted)] font-mono">Password (min 8 chars)</label>
+            <label for="register-password" class="text-xs font-bold text-[var(--ui-text-highlighted)] ">Password (min 8 chars)</label>
             <div class="relative group">
               <UIcon name="i-solar-lock-keyhole-linear" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ui-text-toned)] group-focus-within:text-primary-400 transition-colors pointer-events-none" />
               <input
@@ -195,13 +195,13 @@ const handleRegister = async () => {
                 type="password"
                 required
                 placeholder="••••••••"
-                class="w-full pl-11 pr-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all font-mono"
+                class="w-full pl-11 pr-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all"
               />
             </div>
           </div>
 
           <div class="flex flex-col gap-1.5">
-            <label for="register-confirm" class="text-xs font-bold text-[var(--ui-text-highlighted)] font-mono">Confirm Password</label>
+            <label for="register-confirm" class="text-xs font-bold text-[var(--ui-text-highlighted)] ">Confirm Password</label>
             <div class="relative group">
               <UIcon name="i-solar-lock-keyhole-bold-duotone" class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ui-text-toned)] group-focus-within:text-primary-400 transition-colors pointer-events-none" />
               <input
@@ -210,7 +210,7 @@ const handleRegister = async () => {
                 type="password"
                 required
                 placeholder="••••••••"
-                class="w-full pl-11 pr-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all font-mono"
+                class="w-full pl-11 pr-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all"
               />
             </div>
           </div>
