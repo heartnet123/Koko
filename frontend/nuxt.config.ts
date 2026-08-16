@@ -19,5 +19,12 @@ export default defineNuxtConfig({
     '@nuxt/eslint',
   ],
 
+  fonts: {
+    families: [
+      { name: 'Geist', weights: [400, 500, 600, 700] },
+      { name: 'Geist Mono', weights: [400, 500, 600, 700] }
+    ]
+  },
+
   css: ['~/assets/css/main.css'],
 })

@@ -4,8 +4,8 @@ import { useRouter } from 'vue-router'
 import { useAuth } from '~/composables/useAuth'
 
 useSeoMeta({
-  title: 'Koko - Settings',
-  description: 'Manage your Koko display name, avatar, biography, and password.'
+  title: 'Settings — KoKo',
+  description: 'Manage your KoKo display name, avatar, biography, and security credentials.'
 })
 
 const auth = useAuth()
@@ -66,11 +66,20 @@ const handleSave = async () => {
 </script>
 
 <template>
-  <div class="max-w-4xl mx-auto px-4 md:px-8 py-8 w-full flex flex-col gap-6">
-    <div class="flex items-baseline justify-between border-b border-muted/50 pb-4">
+  <div class="max-w-4xl mx-auto px-4 md:px-8 py-8 w-full flex flex-col gap-6 animate-fade-in-up">
+    <!-- Header -->
+    <div class="glass-surface p-6 md:p-8 rounded-3xl border border-[var(--glass-border)] shadow-md flex items-center justify-between">
       <div>
-        <h1 class="text-3xl font-semibold tracking-tighter text-highlighted mb-1">Settings</h1>
-        <p class="text-toned text-xs">Update profile details and account password.</p>
+        <div class="inline-flex items-center gap-2 mb-2">
+          <div class="w-2 h-4 bg-primary-500 rounded-full " />
+          <span class="text-xs font-bold text-primary-400 uppercase tracking-wider font-mono">Preferences</span>
+        </div>
+        <h1 class="text-2xl md:text-3xl font-bold tracking-tight text-[var(--ui-text-highlighted)]">
+          Account Settings
+        </h1>
+        <p class="text-xs md:text-sm text-[var(--ui-text-toned)] mt-1 font-normal">
+          Update your profile avatar, biography, and security credentials.
+        </p>
       </div>
       <UButton
         to="/profile"
@@ -78,54 +87,54 @@ const handleSave = async () => {
         icon="i-solar-user-linear"
         variant="ghost"
         color="neutral"
-        class="rounded-xl cursor-pointer"
+        class="glass-pill rounded-xl px-4 py-2 text-xs font-bold cursor-pointer hover:bg-white/10"
       />
     </div>
 
-    <form v-if="auth.user.value" class="bg-elevated border border-muted/50 rounded-3xl p-6 md:p-8 shadow-lg flex flex-col gap-6" @submit.prevent="handleSave">
-      <div class="flex flex-col md:flex-row gap-6 items-start">
+    <form v-if="auth.user.value" class="glass-surface-elevated border border-[var(--glass-border)] rounded-3xl p-6 md:p-8 shadow-xl flex flex-col gap-6" @submit.prevent="handleSave">
+      <div class="flex flex-col md:flex-row gap-8 items-start">
         <div class="flex flex-col items-center gap-3 w-full md:w-48">
           <UAvatar
             :src="avatarUrl || auth.user.value.avatar_url || 'https://i.pravatar.cc/150'"
             alt="User avatar preview"
             size="2xl"
-            class="ring-4 ring-primary/20"
+            class="ring-4 ring-primary-400/30 rounded-2xl shadow-xl"
           />
-          <p class="text-xs text-toned text-center">Choose preset or paste image URL.</p>
+          <p class="text-xs text-[var(--ui-text-toned)] text-center font-mono">Avatar Preview</p>
         </div>
 
-        <div class="flex-1 w-full flex flex-col gap-4">
+        <div class="flex-1 w-full flex flex-col gap-5 font-mono">
           <div>
-            <label for="display-name" class="text-[10px] text-toned uppercase tracking-wider font-semibold block mb-1">Display Name</label>
+            <label for="display-name" class="text-[10px] text-[var(--ui-text-toned)] uppercase tracking-wider font-bold block mb-1.5">Display Name</label>
             <input
               id="display-name"
               v-model="displayName"
               type="text"
-              class="w-full px-4 py-2.5 bg-default border border-muted rounded-xl text-sm text-default focus:outline-none focus:border-primary/40 transition-colors"
+              class="w-full px-4 py-2.5 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] focus:outline-none focus:ring-2 focus:ring-primary-500/40 transition-all"
               placeholder="Display name"
             />
           </div>
 
           <div>
-            <label for="avatar-url" class="text-[10px] text-toned uppercase tracking-wider font-semibold block mb-1">Avatar URL</label>
+            <label for="avatar-url" class="text-[10px] text-[var(--ui-text-toned)] uppercase tracking-wider font-bold block mb-1.5">Avatar Image URL</label>
             <input
               id="avatar-url"
               v-model="avatarUrl"
               type="url"
-              class="w-full px-4 py-2.5 bg-default border border-muted rounded-xl text-sm text-default focus:outline-none focus:border-primary/40 transition-colors"
+              class="w-full px-4 py-2.5 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] focus:outline-none focus:ring-2 focus:ring-primary-500/40 transition-all"
               placeholder="https://example.com/avatar.jpg"
             />
           </div>
 
           <div>
-            <span class="text-[10px] text-toned uppercase tracking-wider font-semibold block mb-2">Avatar Presets</span>
-            <div class="flex flex-wrap gap-2">
+            <span class="text-[10px] text-[var(--ui-text-toned)] uppercase tracking-wider font-bold block mb-2">Preset Avatars</span>
+            <div class="flex flex-wrap gap-2.5">
               <button
                 v-for="preset in avatarPresets"
                 :key="preset"
                 type="button"
-                class="w-12 h-12 rounded-full overflow-hidden ring-2 transition-all focus:outline-none focus-visible:ring-primary"
-                :class="avatarUrl === preset ? 'ring-primary' : 'ring-transparent hover:ring-muted'"
+                class="w-11 h-11 rounded-xl overflow-hidden ring-2 transition-all cursor-pointer focus:outline-none"
+                :class="avatarUrl === preset ? 'ring-primary-400 scale-105 ' : 'ring-transparent hover:ring-white/30'"
                 @click="avatarUrl = preset"
               >
                 <NuxtImg :src="preset" alt="Avatar preset" class="w-full h-full object-cover" />
@@ -134,40 +143,40 @@ const handleSave = async () => {
           </div>
 
           <div>
-            <label for="bio" class="text-[10px] text-toned uppercase tracking-wider font-semibold block mb-1">Bio</label>
+            <label for="bio" class="text-[10px] text-[var(--ui-text-toned)] uppercase tracking-wider font-bold block mb-1.5">Biography</label>
             <textarea
               id="bio"
               v-model="bio"
-              rows="5"
-              class="w-full px-4 py-3 bg-default border border-muted rounded-xl text-sm text-default focus:outline-none focus:border-primary/40 transition-colors resize-none"
-              placeholder="Tell people about yourself..."
+              rows="4"
+              class="w-full px-4 py-3 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] focus:outline-none focus:ring-2 focus:ring-primary-500/40 transition-all resize-none"
+              placeholder="Tell other anime fans about yourself..."
             />
           </div>
 
           <div>
-            <label for="password" class="text-[10px] text-toned uppercase tracking-wider font-semibold block mb-1">New Password</label>
+            <label for="password" class="text-[10px] text-[var(--ui-text-toned)] uppercase tracking-wider font-bold block mb-1.5">New Password (Optional)</label>
             <input
               id="password"
               v-model="newPassword"
               type="password"
               autocomplete="new-password"
-              class="w-full px-4 py-2.5 bg-default border border-muted rounded-xl text-sm text-default focus:outline-none focus:border-primary/40 transition-colors"
-              placeholder="Leave blank to keep current password"
+              class="w-full px-4 py-2.5 glass-pill rounded-xl text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] focus:outline-none focus:ring-2 focus:ring-primary-500/40 transition-all"
+              placeholder="Leave blank to retain current password"
             />
           </div>
         </div>
       </div>
 
-      <p v-if="saveError" class="text-sm text-error font-medium">{{ saveError }}</p>
-      <p v-if="saveSuccess" class="text-sm text-success font-medium">Settings saved.</p>
+      <p v-if="saveError" class="text-xs text-[var(--ui-error)] font-mono font-bold">{{ saveError }}</p>
+      <p v-if="saveSuccess" class="text-xs text-green-400 font-mono font-bold">Settings saved successfully.</p>
 
-      <div class="flex justify-end gap-3 border-t border-muted/50 pt-6">
+      <div class="flex justify-end gap-3 border-t border-[var(--glass-border-subtle)] pt-6">
         <UButton
           to="/profile"
           label="Cancel"
           variant="ghost"
           color="neutral"
-          class="rounded-xl cursor-pointer"
+          class="glass-pill rounded-xl px-5 py-2.5 text-xs font-bold cursor-pointer hover:bg-white/10"
         />
         <UButton
           type="submit"
@@ -175,7 +184,7 @@ const handleSave = async () => {
           icon="i-solar-diskette-linear"
           color="primary"
           :loading="saveLoading"
-          class="rounded-xl cursor-pointer"
+          class="rounded-xl px-6 py-2.5 text-xs font-bold shadow-xl shadow-primary-500/25 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
         />
       </div>
     </form>

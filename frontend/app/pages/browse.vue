@@ -46,12 +46,12 @@ const removeGenre = (genreId: number) => {
   if (currentIds.length > 0) {
     query.genres = currentIds.join(',')
   } else {
-    delete query.genres
+    query.genres = undefined
   }
   
-  delete query.genre
-  delete query.genre_name
-  delete query.page
+  query.genre = undefined
+  query.genre_name = undefined
+  query.page = undefined
   
   navigateTo({
     path: route.path,
@@ -110,7 +110,7 @@ const setPage = (targetPage: number) => {
 
   const query = { ...route.query }
   if (nextPage === 1) {
-    delete query.page
+    query.page = undefined
   } else {
     query.page = String(nextPage)
   }
@@ -131,143 +131,141 @@ const lastPage = () => setPage(pageCount.value)
 const headerText = computed(() => {
   if (searchQuery.value) return `Search Results for "${searchQuery.value}"`
   const count = genreIds.value.length
-  if (count === 0) return 'Popular Anime'
+  if (count === 0) return 'Explore Library'
   if (count === 1 && genreName.value) return `Explore ${genreName.value}`
-  return 'Explore Anime'
+  return 'Filtered Collections'
 })
 
 const subtitleText = computed(() => {
-  if (searchQuery.value) return 'Showing anime matching your search.'
+  if (searchQuery.value) return 'Matching titles from our high-performance anime catalog.'
   const count = genreIds.value.length
-  if (count === 0) return 'Showing collections matching your query.'
-  if (count === 1) return 'Showing collections matching 1 active filter.'
-  return `Showing collections matching ${count} active filters.`
+  if (count === 0) return 'Browse top anime ranked by popularity and community scores.'
+  if (count === 1) return 'Displaying collections matching 1 active filter tag.'
+  return `Displaying collections matching ${count} active filter tags.`
 })
 </script>
 
 <template>
-  <div class="max-w-7xl mx-auto px-8 w-full flex flex-col gap-8 mt-4 mb-12">
-    <div class="flex items-center justify-between">
+  <div class="max-w-7xl mx-auto px-4 md:px-8 w-full flex flex-col gap-8 mt-4 mb-16 animate-fade-in-up">
+    <!-- Header with Filter Controls -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 glass-surface p-6 md:p-8 rounded-3xl border border-[var(--glass-border)] shadow-md">
       <div>
-        <h2 class="text-2xl font-bold tracking-tight text-highlighted">
+        <div class="inline-flex items-center gap-2 mb-2">
+          <div class="w-2 h-4 bg-primary-500 rounded-full " />
+          <span class="text-xs font-bold text-primary-400 uppercase tracking-wider font-mono">Anime Catalog</span>
+        </div>
+        <h2 class="text-2xl md:text-3xl font-bold tracking-tight text-[var(--ui-text-highlighted)]">
           {{ headerText }}
         </h2>
-        <p class="text-sm text-toned mt-1">
+        <p class="text-xs md:text-sm text-[var(--ui-text-toned)] mt-1 font-normal">
           {{ subtitleText }}
         </p>
       </div>
       <GenreFilterDropdown />
     </div>
 
-    <!-- Selected Genre Pills Row -->
+    <!-- Active Genre Filter Tags -->
     <TransitionGroup
       v-if="selectedGenres.length > 0"
       name="list"
       tag="div"
-      class="flex flex-wrap gap-2 items-center -mt-4 relative"
+      class="flex flex-wrap gap-2 items-center -mt-2 relative"
     >
-      <UBadge
+      <div
         v-for="genre in selectedGenres"
         :key="genre.mal_id"
-        size="md"
-        variant="subtle"
-        class="rounded-full flex items-center gap-1.5 pl-3 pr-1 py-1 text-primary bg-primary/10 border border-primary/50 font-medium"
+        class="glass-chip rounded-xl flex items-center gap-2 pl-3 pr-2 py-1.5 text-xs font-semibold text-primary-300 border-primary-400/40 shadow-sm"
       >
         <span>{{ genre.name }}</span>
-        <UButton
-          icon="i-solar-close-circle-bold"
-          variant="ghost"
-          color="primary"
-          class="w-11 h-11 -my-3 -mr-1 rounded-full flex items-center justify-center cursor-pointer text-primary/70 hover:text-primary hover:bg-transparent p-0"
+        <button
+          type="button"
+          class="text-[var(--ui-text-toned)] hover:text-white transition-colors cursor-pointer p-0.5 rounded hover:bg-white/10"
           @click="removeGenre(genre.mal_id)"
           :aria-label="`Remove ${genre.name} filter`"
-        />
-      </UBadge>
+        >
+          <UIcon name="i-solar-close-circle-linear" class="w-4 h-4" />
+        </button>
+      </div>
     </TransitionGroup>
 
-    <div class="relative min-h-[300px]">
-      <!-- Loading overlay -->
+    <!-- Grid Results Area -->
+    <div class="relative min-h-[360px]">
+      <!-- Loading Glass Overlay -->
       <div
         v-if="loading"
-        class="absolute inset-0 flex items-center justify-center bg-default/40 backdrop-blur-[1px] z-10 text-toned transition-all duration-200"
+        class="absolute inset-0 flex items-center justify-center bg-[var(--ui-overlay)]/20 backdrop-blur-xs z-10 text-[var(--ui-text-toned)] transition-all duration-200 rounded-3xl"
       >
-        <div class="flex items-center gap-2 bg-elevated border border-muted px-4 py-2.5 rounded-full shadow-sm">
-          <UIcon name="i-solar-spinner-linear" class="w-5 h-5 animate-spin text-primary" />
-          <span class="text-sm font-medium">Updating results...</span>
+        <div class="flex items-center gap-3 glass-surface-elevated border border-[var(--glass-border)] px-5 py-3 rounded-2xl shadow-xl">
+          <UIcon name="i-solar-spinner-linear" class="w-5 h-5 animate-spin text-primary-400" />
+          <span class="text-xs font-bold text-[var(--ui-text-highlighted)] font-mono">Fetching catalog...</span>
         </div>
       </div>
 
-      <div v-if="animes.length === 0 && !loading" class="flex flex-col items-center justify-center h-64 text-toned border border-dashed border-muted rounded-2xl">
-        <UIcon name="i-solar-ghost-bold" class="w-8 h-8 mb-2" />
-        No anime found.
+      <!-- Empty State -->
+      <div v-if="animes.length === 0 && !loading" class="flex flex-col items-center justify-center h-72 text-[var(--ui-text-toned)] glass-surface border border-dashed border-[var(--glass-border)] rounded-3xl p-8 text-center">
+        <UIcon name="i-solar-ghost-bold" class="w-10 h-10 mb-3 text-primary-400" />
+        <h3 class="text-sm font-bold text-[var(--ui-text-highlighted)]">No anime found</h3>
+        <p class="text-xs text-[var(--ui-text-toned)] mt-1 max-w-xs font-normal">Try adjusting your search terms or clearing some genre filters.</p>
       </div>
 
+      <!-- Anime Card Grid -->
       <div
         v-else
-        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 transition-opacity duration-200"
+        class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-5 md:gap-6 transition-opacity duration-200"
         :class="{ 'opacity-50 pointer-events-none': loading }"
       >
-        <NuxtLink
+        <AnimeCard
           v-for="item in animes"
           :key="item.mal_id"
-          :to="`/movie/${item.mal_id}`"
-          class="flex flex-col group cursor-pointer"
-        >
-          <div class="relative rounded-2xl overflow-hidden aspect-[3/4] mb-3 shadow-[0_4px_12px_rgb(0,0,0,0.03)] border border-muted/50 bg-elevated">
-            <NuxtImg
-              :src="item.images.jpg.large_image_url || item.images.jpg.image_url"
-              :alt="item.title"
-              class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
-            />
-          </div>
-          <h4 class="text-sm font-medium text-highlighted tracking-tight truncate">{{ item.title }}</h4>
-          <p class="text-xs text-toned mt-0.5">{{ item.type ?? 'Anime' }}</p>
-        </NuxtLink>
+          :anime="item"
+          class="w-full"
+        />
       </div>
     </div>
 
-    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-8">
-      <div class="flex items-center gap-2">
-        <UButton
+    <!-- Glass Pagination Controls -->
+    <div class="flex flex-col sm:flex-row items-center justify-center gap-3 mt-4 glass-surface p-4 rounded-2xl border border-[var(--glass-border)] w-fit mx-auto shadow-sm">
+      <div class="flex items-center gap-1.5">
+        <button
           :disabled="isFirstPage"
-          variant="ghost"
-          icon="i-solar-double-alt-arrow-left-linear"
+          class="glass-pill px-3 py-1.5 rounded-xl text-xs font-semibold text-[var(--ui-text-highlighted)] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/10 transition-all flex items-center gap-1 cursor-pointer"
           @click="firstPage"
         >
-          First
-        </UButton>
-        <UButton
+          <UIcon name="i-solar-double-alt-arrow-left-linear" class="w-3.5 h-3.5" />
+          <span>First</span>
+        </button>
+        <button
           :disabled="isFirstPage"
-          variant="ghost"
-          icon="i-solar-alt-arrow-left-linear"
+          class="glass-pill px-3 py-1.5 rounded-xl text-xs font-semibold text-[var(--ui-text-highlighted)] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/10 transition-all flex items-center gap-1 cursor-pointer"
           @click="prevPage"
         >
-          Previous
-        </UButton>
+          <UIcon name="i-solar-alt-arrow-left-linear" class="w-3.5 h-3.5" />
+          <span>Prev</span>
+        </button>
       </div>
 
-      <p class="text-sm text-toned px-2">
-        Page <span class="font-semibold text-highlighted">{{ page }}</span> of
-        <span class="font-semibold text-highlighted">{{ pageCount }}</span>
-      </p>
+      <div class="text-xs text-[var(--ui-text-toned)] px-3 font-mono font-semibold">
+        Page <span class="text-primary-400 font-bold">{{ page }}</span> of
+        <span class="text-[var(--ui-text-highlighted)] font-bold">{{ pageCount }}</span>
+      </div>
 
-      <div class="flex items-center gap-2">
-        <UButton
+      <div class="flex items-center gap-1.5">
+        <button
           :disabled="!hasNextPage"
-          variant="ghost"
-          trailing-icon="i-solar-alt-arrow-right-linear"
+          class="glass-pill px-3 py-1.5 rounded-xl text-xs font-semibold text-[var(--ui-text-highlighted)] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/10 transition-all flex items-center gap-1 cursor-pointer"
           @click="nextPage"
         >
-          Next
-        </UButton>
-        <UButton
+          <span>Next</span>
+          <UIcon name="i-solar-alt-arrow-right-linear" class="w-3.5 h-3.5" />
+        </button>
+        <button
           :disabled="isLastPage"
-          variant="ghost"
-          trailing-icon="i-solar-double-alt-arrow-right-linear"
+          class="glass-pill px-3 py-1.5 rounded-xl text-xs font-semibold text-[var(--ui-text-highlighted)] disabled:opacity-40 disabled:cursor-not-allowed hover:bg-white/10 transition-all flex items-center gap-1 cursor-pointer"
           @click="lastPage"
         >
-          Last
-        </UButton>
+          <span>Last</span>
+          <UIcon name="i-solar-double-alt-arrow-right-linear" class="w-3.5 h-3.5" />
+        </button>
       </div>
     </div>
   </div>

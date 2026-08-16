@@ -7,10 +7,15 @@ import { useAuth } from '~/composables/useAuth'
 const route = useRoute()
 const router = useRouter()
 const search = ref('')
+const colorMode = useColorMode()
 let debounceTimer: ReturnType<typeof setTimeout> | null = null
 let pendingNavigations = 0
 
 const auth = useAuth()
+
+const toggleColorMode = () => {
+  colorMode.preference = colorMode.value === 'dark' ? 'light' : 'dark'
+}
 
 const getQueryString = (q: LocationQueryValue | LocationQueryValue[]): string => {
   if (!q) return ''
@@ -24,7 +29,7 @@ onMounted(() => {
   }
 })
 
-// Sync from route back to input (e.g. user clicks back button)
+// Sync from route back to input
 watch(() => route.query.q, (newQ) => {
   if (pendingNavigations > 0) return
   const qStr = getQueryString(newQ)
@@ -46,13 +51,13 @@ watch(search, (newValue) => {
     if (newValue) {
       query.q = newValue
     } else {
-      delete query.q
+      query.q = undefined
     }
-    delete query.page
+    query.page = undefined
     
     try {
       await router.push({ path: '/browse', query })
-    } catch (err) {
+    } catch {
       // Ignore navigation abort errors
     } finally {
       pendingNavigations--
@@ -62,7 +67,7 @@ watch(search, (newValue) => {
   if (route.path !== '/browse' && pendingNavigations === 0) {
     navigate()
   } else {
-    debounceTimer = setTimeout(navigate, 500)
+    debounceTimer = setTimeout(navigate, 450)
   }
 })
 
@@ -111,40 +116,53 @@ defineEmits<{
 </script>
 
 <template>
-  <header class="h-20 px-4 md:px-8 flex items-center justify-between sticky top-0 bg-default/80 backdrop-blur-md z-40 border-b border-muted/50">
+  <header class="h-20 px-4 md:px-8 flex items-center justify-between sticky top-0 glass-surface z-40 border-b border-[var(--glass-border-subtle)] transition-all">
     <!-- Left Menu Trigger & Search -->
     <div class="flex items-center gap-3 w-full max-w-lg">
       <UButton
         icon="i-solar-hamburger-menu-linear"
         color="neutral"
         variant="ghost"
-        class="lg:hidden rounded-full cursor-pointer focus:outline-none"
+        class="lg:hidden rounded-xl cursor-pointer hover:bg-white/10"
         aria-label="Open menu"
         @click="$emit('toggle-menu')"
       />
       <div class="relative flex-1 group">
         <UIcon
           name="i-solar-magnifer-linear"
-          class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-toned group-focus-within:text-primary transition-colors"
+          class="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-[var(--ui-text-toned)] group-focus-within:text-primary-400 transition-colors pointer-events-none"
         />
         <input
           v-model="search"
           type="search"
           placeholder="Search anime, genres, studios..."
           aria-label="Search anime, genres, studios"
-          class="w-full pl-10 pr-4 py-2.5 bg-elevated rounded-full text-sm text-default placeholder:text-toned border border-muted focus:outline-none focus:border-primary/40 focus:bg-default transition-all"
+          class="w-full pl-11 pr-16 py-2.5 glass-pill rounded-xl text-sm font-semibold text-[var(--ui-text-highlighted)] placeholder:text-[var(--ui-text-toned)] placeholder:font-normal focus:outline-none focus:ring-2 focus:ring-primary-500/40 focus:border-primary-500/40 transition-all"
         />
+        <div class="absolute right-3 top-1/2 -translate-y-1/2 hidden sm:flex items-center gap-0.5 text-[10px] font-mono text-[var(--ui-text-toned)] bg-[var(--ui-overlay)]/20 dark:bg-white/10 px-1.5 py-0.5 rounded border border-white/10 pointer-events-none">
+          <span class="text-[9px]">⌘</span>K
+        </div>
       </div>
     </div>
 
-    <!-- User actions -->
-    <div class="flex items-center gap-3 ml-6">
+    <!-- User actions & Theme toggle -->
+    <div class="flex items-center gap-2.5 ml-4">
+      <!-- Dark mode toggle -->
+      <UButton
+        :icon="colorMode.value === 'dark' ? 'i-solar-sun-bold-duotone' : 'i-solar-moon-bold-duotone'"
+        color="neutral"
+        variant="ghost"
+        class="rounded-xl cursor-pointer hover:bg-white/10"
+        aria-label="Toggle theme"
+        @click="toggleColorMode"
+      />
+
       <UButton
         icon="i-solar-bell-linear"
         color="neutral"
         variant="ghost"
         size="md"
-        class="rounded-full"
+        class="rounded-xl hover:bg-white/10"
         aria-label="Notifications"
       />
       
@@ -155,7 +173,7 @@ defineEmits<{
             :src="auth.user.value?.avatar_url || 'https://i.pravatar.cc/40'"
             alt="User avatar"
             size="sm"
-            class="cursor-pointer ring-2 ring-primary/20 hover:ring-primary/50 transition-all"
+            class="cursor-pointer ring-2 ring-primary-500/30 hover:ring-primary-500  transition-all rounded-xl"
           />
         </UDropdownMenu>
 
@@ -167,7 +185,7 @@ defineEmits<{
           color="primary"
           size="sm"
           icon="i-solar-login-linear"
-          class="rounded-full shadow-md shadow-primary/10 cursor-pointer font-medium"
+          class="rounded-xl shadow-lg shadow-primary-500/20 cursor-pointer font-bold px-4"
         />
       </ClientOnly>
     </div>

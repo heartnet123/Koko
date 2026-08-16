@@ -75,145 +75,165 @@ const toggleWatchlist = async () => {
   }
 }
 </script>
+
 <template>
   <!-- Loading skeleton -->
-  <div v-if="status === 'pending'" class="max-w-7xl mx-auto px-8 w-full mt-4 animate-pulse">
-    <div class="h-8 w-24 bg-elevated rounded-lg mb-6" />
-    <div class="h-[420px] bg-elevated rounded-[2rem] mb-8" />
-    <div class="grid grid-cols-3 gap-8">
-      <div class="col-span-2 space-y-6">
-        <div class="h-48 bg-elevated rounded-2xl" />
-        <div class="h-32 bg-elevated rounded-2xl" />
+  <div v-if="status === 'pending'" class="max-w-7xl mx-auto px-4 md:px-8 w-full mt-4 animate-fade-in-up">
+    <div class="h-8 w-32 glass-pill animate-glass-shimmer rounded-xl mb-6" />
+    <div class="h-[440px] glass-surface-elevated rounded-[2.5rem] mb-8 animate-glass-shimmer border border-[var(--glass-border)]" />
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div class="lg:col-span-2 space-y-6">
+        <div class="h-64 glass-surface rounded-3xl animate-glass-shimmer border border-[var(--glass-border)]" />
+        <div class="h-48 glass-surface rounded-3xl animate-glass-shimmer border border-[var(--glass-border)]" />
       </div>
       <div class="space-y-6">
-        <div class="h-56 bg-elevated rounded-2xl" />
-        <div class="h-64 bg-elevated rounded-2xl" />
+        <div class="h-64 glass-surface rounded-3xl animate-glass-shimmer border border-[var(--glass-border)]" />
+        <div class="h-72 glass-surface rounded-3xl animate-glass-shimmer border border-[var(--glass-border)]" />
       </div>
     </div>
   </div>
+
   <!-- Error state -->
-  <div v-else-if="error" class="max-w-7xl mx-auto px-8 w-full mt-4">
-    <NuxtLink to="/" class="inline-flex items-center gap-2 text-sm text-toned hover:text-primary transition-colors mb-6 group">
+  <div v-else-if="error" class="max-w-7xl mx-auto px-4 md:px-8 w-full mt-4">
+    <NuxtLink to="/" class="inline-flex items-center gap-2 text-xs font-semibold text-[var(--ui-text-toned)] hover:text-primary-400 transition-colors mb-6 group glass-pill px-3 py-1.5 rounded-xl w-fit">
       <UIcon name="i-solar-alt-arrow-left-linear" class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
       Back to Home
     </NuxtLink>
-    <div class="flex flex-col items-center justify-center py-24 text-center">
-      <div class="w-16 h-16 rounded-full bg-red-500/10 flex items-center justify-center mb-4">
-        <UIcon name="i-solar-danger-triangle-linear" class="w-7 h-7 text-red-400" />
+    <div class="flex flex-col items-center justify-center py-20 text-center glass-surface rounded-3xl border border-[var(--glass-border)] px-6">
+      <div class="w-16 h-16 rounded-2xl glass-pill flex items-center justify-center mb-4 text-[var(--ui-error)]">
+        <UIcon name="i-solar-danger-triangle-linear" class="w-8 h-8" />
       </div>
-      <h2 class="text-xl font-semibold text-highlighted mb-2">Something went wrong</h2>
-      <p class="text-sm text-toned max-w-sm mb-6">We couldn't load this anime. Please check your connection and try again.</p>
+      <h2 class="text-xl font-bold text-[var(--ui-text-highlighted)] mb-2">Failed to load anime details</h2>
+      <p class="text-xs text-[var(--ui-text-toned)] max-w-sm mb-6 font-normal">We encountered an issue communicating with the catalog. Please try again.</p>
       <UButton
         label="Try Again"
         icon="i-solar-refresh-linear"
         color="primary"
-        class="rounded-full"
+        class="rounded-xl px-6 py-2.5 font-bold shadow-lg shadow-primary-500/20 cursor-pointer"
         @click="refreshNuxtData(`anime-${animeId}`)"
       />
     </div>
   </div>
+
   <!-- Main content -->
-  <div v-else-if="anime" class="max-w-7xl mx-auto px-8 w-full mt-4 pb-8">
+  <div v-else-if="anime" class="max-w-7xl mx-auto px-4 md:px-8 w-full mt-4 pb-12 animate-fade-in-up">
     <!-- Back button -->
-    <NuxtLink to="/" class="inline-flex items-center gap-2 text-sm text-toned hover:text-primary transition-colors mb-6 group">
+    <NuxtLink to="/" class="inline-flex items-center gap-2 text-xs font-semibold text-[var(--ui-text-toned)] hover:text-primary-400 transition-colors mb-6 group glass-pill px-3.5 py-2 rounded-xl w-fit">
       <UIcon name="i-solar-alt-arrow-left-linear" class="w-4 h-4 group-hover:-translate-x-0.5 transition-transform" />
-      Back to Home
+      Back to Library
     </NuxtLink>
-    <!-- Hero -->
-    <div class="relative w-full h-[420px] rounded-[2rem] overflow-hidden shadow-lg mb-8 bg-elevated">
+
+    <!-- Glass Hero Banner -->
+    <div class="relative w-full min-h-[460px] md:h-[460px] rounded-[2.5rem] overflow-hidden glass-surface-elevated border border-[var(--glass-border)]  mb-8 p-6 md:p-10 flex flex-col justify-end">
+      <!-- Background Artwork Blur -->
       <NuxtImg
         v-if="heroImage"
         :src="heroImage"
         :alt="anime.title"
-        class="absolute inset-0 w-full h-full object-cover object-top scale-105 blur-sm opacity-30"
+        class="absolute inset-0 w-full h-full object-cover object-top scale-110 blur-md opacity-35"
       />
-      <!-- Gradient overlays -->
-      <div class="absolute inset-0 bg-gradient-to-r from-default via-default/90 to-default/30" />
-      <div class="absolute inset-0 bg-gradient-to-t from-default/70 via-transparent to-transparent" />
+      <!-- Glass Gradients -->
+      <div class="absolute inset-0 bg-gradient-to-t from-[#090B10]/95 via-[#090B10]/70 to-transparent" />
+      <div class="absolute inset-0 bg-gradient-to-r from-[#090B10]/90 via-[#090B10]/40 to-transparent hidden md:block" />
+
       <!-- Hero content -->
-      <div class="relative h-full flex items-center gap-8 px-10">
-        <!-- Poster -->
-        <div class="flex-shrink-0 w-56 h-[320px] rounded-2xl overflow-hidden shadow-[0_12px_40px_-8px_rgba(0,0,0,0.4)] border border-white/10">
+      <div class="relative flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 z-10">
+        <!-- Poster with 3D glass edge -->
+        <div class="flex-shrink-0 w-44 md:w-56 aspect-[2/3] rounded-2xl overflow-hidden  glass-surface border border-[var(--glass-border)] ring-1 ring-white/20">
           <NuxtImg
             :src="anime.images?.jpg?.large_image_url || anime.images?.jpg?.image_url"
             :alt="anime.title"
             class="w-full h-full object-cover"
           />
         </div>
-        <!-- Text overlay -->
-        <div class="flex flex-col justify-center max-w-xl">
-          <div class="flex items-center gap-3 mb-3 flex-wrap">
+
+        <!-- Text details -->
+        <div class="flex flex-col justify-center max-w-2xl text-white">
+          <div class="flex items-center gap-2 mb-3 flex-wrap font-mono text-xs">
             <span
               v-if="anime.score != null"
-              class="inline-flex items-center gap-1 bg-primary-500/15 text-primary-400 text-xs font-semibold px-2.5 py-1 rounded-lg"
+              class="glass-chip text-[var(--rank-gold)] px-3 py-1 rounded-xl flex items-center gap-1.5 font-bold shadow-sm"
             >
-              <UIcon name="i-solar-star-bold" class="w-3.5 h-3.5" />
+              <UIcon name="i-solar-star-bold" class="w-3.5 h-3.5 text-[var(--rank-gold)]" />
               {{ formattedScore }}
             </span>
-            <span v-if="anime.year != null" class="text-xs text-toned font-medium bg-elevated px-2.5 py-1 rounded-lg">{{ anime.year }}</span>
-            <span v-if="anime.type" class="text-xs text-toned font-medium bg-elevated px-2.5 py-1 rounded-lg">{{ anime.type }}</span>
-            <span v-if="anime.rating" class="text-xs text-toned font-medium bg-elevated px-2.5 py-1 rounded-lg">{{ anime.rating }}</span>
+            <span v-if="anime.year != null" class="glass-chip text-[var(--ui-text-on-image)] px-2.5 py-1 rounded-xl">{{ anime.year }}</span>
+            <span v-if="anime.type" class="glass-chip text-[var(--ui-text-on-image)] px-2.5 py-1 rounded-xl uppercase">{{ anime.type }}</span>
+            <span v-if="anime.rating" class="glass-chip text-[var(--ui-text-on-image-muted)] px-2.5 py-1 rounded-xl">{{ anime.rating }}</span>
           </div>
-          <h1 class="text-3xl font-bold tracking-tight text-white leading-tight mb-1">
+
+          <h1 class="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight mb-2 drop-shadow-md">
             {{ anime.title_english || anime.title }}
           </h1>
-          <p v-if="anime.title_japanese" class="text-sm text-white/50 mb-4">{{ anime.title_japanese }}</p>
+          <p v-if="anime.title_japanese" class="text-xs md:text-sm text-[var(--ui-text-on-image-muted)] mb-4 font-mono">{{ anime.title_japanese }}</p>
+
           <!-- Genre pills -->
           <div class="flex flex-wrap gap-2 mb-5">
             <span
               v-for="genre in anime.genres"
               :key="genre.mal_id"
-              class="text-xs font-medium text-white/80 bg-white/10 backdrop-blur border border-white/10 px-3 py-1 rounded-full"
+              class="text-xs font-semibold text-[var(--ui-text-on-image)] glass-chip px-3 py-1 rounded-xl hover:border-primary-400/40 transition-colors"
             >
               {{ genre.name }}
             </span>
           </div>
+
           <!-- Quick stats row -->
-          <div class="flex items-center gap-5 text-sm text-white/70 mb-6">
+          <div class="flex items-center gap-5 text-xs md:text-sm text-[var(--ui-text-on-image-muted)] mb-6 font-mono">
             <span v-if="anime.episodes != null" class="flex items-center gap-1.5">
-              <UIcon name="i-solar-playlist-minimalistic-linear" class="w-4 h-4 text-white/50" />
-              {{ anime.episodes }} eps
+              <UIcon name="i-solar-playlist-minimalistic-linear" class="w-4 h-4 text-primary-400" />
+              {{ anime.episodes }} EPS
             </span>
             <span v-if="anime.duration" class="flex items-center gap-1.5">
-              <UIcon name="i-solar-stopwatch-linear" class="w-4 h-4 text-white/50" />
+              <UIcon name="i-solar-stopwatch-linear" class="w-4 h-4 text-primary-400" />
               {{ anime.duration }}
             </span>
             <span v-if="anime.status" class="flex items-center gap-1.5">
-              <UIcon name="i-solar-clock-circle-linear" class="w-4 h-4 text-white/50" />
+              <UIcon name="i-solar-clock-circle-linear" class="w-4 h-4 text-primary-400" />
               {{ anime.status }}
             </span>
           </div>
+
           <!-- Action buttons -->
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-3.5">
             <UButton
+              v-if="youtubeEmbedUrl"
               icon="i-solar-play-bold"
-              label="Play Now"
+              label="Watch Trailer"
               color="primary"
-              class="rounded-full shadow-lg shadow-primary-500/20 px-6 py-2.5 font-medium cursor-pointer"
+              size="lg"
+              class="rounded-2xl font-bold shadow-xl shadow-primary-500/25 px-6 py-3 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+              @click="() => {
+                const el = document.getElementById('trailer-section')
+                if (el) el.scrollIntoView({ behavior: 'smooth' })
+              }"
             />
             <UButton
-              :icon="isInWatchlist ? 'i-solar-minus-circle-linear' : 'i-solar-add-circle-linear'"
-              :label="isInWatchlist ? 'Remove from Watchlist' : 'Add to Watchlist'"
+              :icon="isInWatchlist ? 'i-solar-bookmark-bold' : 'i-solar-bookmark-linear'"
+              :label="isInWatchlist ? 'In Watchlist' : 'Add to Watchlist'"
               color="neutral"
-              variant="outline"
-              class="rounded-full bg-white/10 backdrop-blur border-white/20 text-white hover:bg-white/20 px-6 py-2.5 font-medium cursor-pointer"
+              variant="ghost"
+              size="lg"
+              class="glass-chip font-bold px-6 py-3 rounded-2xl transition-all cursor-pointer hover:bg-white/20 hover:scale-[1.02] active:scale-95"
+              :class="isInWatchlist ? '!text-primary-400 border-primary-400/50' : 'text-white'"
               @click="toggleWatchlist"
             />
           </div>
         </div>
       </div>
     </div>
+
     <!-- Two-column body -->
-    <div class="grid grid-cols-3 gap-8">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
       <!-- Left column (wider) -->
-      <div class="col-span-2 space-y-6">
-        <!-- Trailer -->
-        <section v-if="youtubeEmbedUrl" class="bg-elevated rounded-2xl border border-muted/50 overflow-hidden">
-          <div class="px-6 pt-5 pb-4 flex items-center gap-2">
+      <div class="lg:col-span-2 space-y-6">
+        <!-- Trailer Section -->
+        <section v-if="youtubeEmbedUrl" id="trailer-section" class="glass-surface-elevated rounded-3xl border border-[var(--glass-border)] overflow-hidden shadow-lg">
+          <div class="px-6 pt-5 pb-4 flex items-center gap-2 border-b border-[var(--glass-border-subtle)]">
             <UIcon name="i-solar-play-circle-linear" class="w-5 h-5 text-primary-400" />
-            <h2 class="text-base font-semibold text-highlighted tracking-tight">Trailer</h2>
+            <h2 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight">Official Trailer</h2>
           </div>
-          <div class="aspect-video bg-black">
+          <div class="aspect-video bg-[var(--ui-overlay)]/90">
             <iframe
               :src="youtubeEmbedUrl"
               class="w-full h-full"
@@ -224,219 +244,172 @@ const toggleWatchlist = async () => {
             />
           </div>
         </section>
+
         <!-- Synopsis -->
-        <section v-if="anime.synopsis" class="bg-elevated rounded-2xl border border-muted/50 p-6">
+        <section v-if="anime.synopsis" class="glass-surface rounded-3xl border border-[var(--glass-border)] p-6 md:p-8 shadow-sm">
           <div class="flex items-center gap-2 mb-4">
             <UIcon name="i-solar-document-text-linear" class="w-5 h-5 text-primary-400" />
-            <h2 class="text-base font-semibold text-highlighted tracking-tight">Synopsis</h2>
+            <h2 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight">Synopsis</h2>
           </div>
-          <p class="text-sm text-default leading-relaxed whitespace-pre-line">{{ anime.synopsis }}</p>
+          <p class="text-xs md:text-sm text-[var(--ui-text)] leading-relaxed whitespace-pre-line font-normal">{{ anime.synopsis }}</p>
         </section>
-        <!-- Background -->
-        <section v-if="anime.background" class="bg-elevated rounded-2xl border border-muted/50 p-6">
+
+        <!-- Background Information -->
+        <section v-if="anime.background" class="glass-surface rounded-3xl border border-[var(--glass-border)] p-6 md:p-8 shadow-sm">
           <div class="flex items-center gap-2 mb-4">
             <UIcon name="i-solar-info-circle-linear" class="w-5 h-5 text-primary-400" />
-            <h2 class="text-base font-semibold text-highlighted tracking-tight">Background</h2>
+            <h2 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight">Background</h2>
           </div>
-          <p class="text-sm text-default leading-relaxed whitespace-pre-line">{{ anime.background }}</p>
+          <p class="text-xs md:text-sm text-[var(--ui-text)] leading-relaxed whitespace-pre-line font-normal">{{ anime.background }}</p>
         </section>
+
         <!-- Relations -->
-        <section v-if="anime.relations?.length" class="bg-elevated rounded-2xl border border-muted/50 p-6">
+        <section v-if="anime.relations?.length" class="glass-surface rounded-3xl border border-[var(--glass-border)] p-6 md:p-8 shadow-sm">
           <div class="flex items-center gap-2 mb-4">
             <UIcon name="i-solar-link-round-linear" class="w-5 h-5 text-primary-400" />
-            <h2 class="text-base font-semibold text-highlighted tracking-tight">Relations</h2>
+            <h2 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight">Related Anime & Media</h2>
           </div>
-          <div class="space-y-3">
-            <div v-for="(rel, idx) in anime.relations" :key="idx">
-              <span class="text-xs font-semibold text-primary-400 uppercase tracking-wider">{{ rel.relation }}</span>
-              <div class="flex flex-wrap gap-2 mt-1.5">
+          <div class="space-y-4">
+            <div v-for="(rel, idx) in anime.relations" :key="idx" class="glass-pill p-4 rounded-2xl">
+              <span class="text-xs font-bold text-primary-400 uppercase tracking-wider font-mono">{{ rel.relation }}</span>
+              <div class="flex flex-wrap gap-2 mt-2">
                 <template v-for="entry in rel.entry" :key="entry.mal_id">
                   <NuxtLink
                     v-if="entry.type === 'anime'"
                     :to="`/movie/${entry.mal_id}`"
-                    class="text-sm text-default bg-elevated px-3 py-1.5 rounded-xl border border-muted hover:border-primary-500/30 hover:text-primary-400 transition-colors"
+                    class="text-xs font-semibold text-[var(--ui-text-highlighted)] glass-chip px-3 py-1.5 rounded-xl hover:border-primary-400/50 hover:text-primary-400 transition-all"
                   >
                     {{ entry.name }}
-                    <span class="text-xs text-toned ml-1">({{ entry.type }})</span>
+                    <span class="text-[10px] text-[var(--ui-text-toned)] ml-1 font-mono">({{ entry.type }})</span>
                   </NuxtLink>
                   <span
                     v-else
-                    class="text-sm text-toned bg-elevated px-3 py-1.5 rounded-xl border border-muted cursor-default"
+                    class="text-xs font-medium text-[var(--ui-text-toned)] glass-pill px-3 py-1.5 rounded-xl cursor-default"
                   >
                     {{ entry.name }}
-                    <span class="text-xs text-toned/70 ml-1">({{ entry.type }})</span>
+                    <span class="text-[10px] opacity-70 ml-1 font-mono">({{ entry.type }})</span>
                   </span>
                 </template>
               </div>
             </div>
           </div>
         </section>
+
         <!-- Theme Songs -->
-        <section v-if="anime.theme?.openings?.length || anime.theme?.endings?.length" class="bg-elevated rounded-2xl border border-muted/50 p-6">
+        <section v-if="anime.theme?.openings?.length || anime.theme?.endings?.length" class="glass-surface rounded-3xl border border-[var(--glass-border)] p-6 md:p-8 shadow-sm">
           <div class="flex items-center gap-2 mb-4">
             <UIcon name="i-solar-music-note-linear" class="w-5 h-5 text-primary-400" />
-            <h2 class="text-base font-semibold text-highlighted tracking-tight">Theme Songs</h2>
+            <h2 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight">Theme Songs</h2>
           </div>
           <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div v-if="anime.theme?.openings?.length">
-              <h3 class="text-xs font-semibold text-toned uppercase tracking-wider mb-2">Openings</h3>
-              <ul class="space-y-1.5">
+              <h3 class="text-xs font-bold text-[var(--ui-text-toned)] uppercase tracking-wider mb-3 font-mono">Openings</h3>
+              <ul class="space-y-2">
                 <li
                   v-for="(op, idx) in anime.theme.openings"
                   :key="idx"
-                  class="text-sm text-default flex items-start gap-2 py-1.5 px-3 rounded-lg hover:bg-white/5 transition-colors"
+                  class="text-xs text-[var(--ui-text-highlighted)] flex items-start gap-2.5 p-2.5 rounded-xl glass-pill font-normal"
                 >
                   <UIcon name="i-solar-play-linear" class="w-3.5 h-3.5 text-primary-400 mt-0.5 flex-shrink-0" />
-                  {{ op }}
+                  <span>{{ op }}</span>
                 </li>
               </ul>
             </div>
             <div v-if="anime.theme?.endings?.length">
-              <h3 class="text-xs font-semibold text-toned uppercase tracking-wider mb-2">Endings</h3>
-              <ul class="space-y-1.5">
+              <h3 class="text-xs font-bold text-[var(--ui-text-toned)] uppercase tracking-wider mb-3 font-mono">Endings</h3>
+              <ul class="space-y-2">
                 <li
                   v-for="(ed, idx) in anime.theme.endings"
                   :key="idx"
-                  class="text-sm text-default flex items-start gap-2 py-1.5 px-3 rounded-lg hover:bg-white/5 transition-colors"
+                  class="text-xs text-[var(--ui-text-highlighted)] flex items-start gap-2.5 p-2.5 rounded-xl glass-pill font-normal"
                 >
-                  <UIcon name="i-solar-play-linear" class="w-3.5 h-3.5 text-toned mt-0.5 flex-shrink-0" />
-                  {{ ed }}
+                  <UIcon name="i-solar-play-linear" class="w-3.5 h-3.5 text-[var(--ui-text-toned)] mt-0.5 flex-shrink-0" />
+                  <span>{{ ed }}</span>
                 </li>
               </ul>
             </div>
           </div>
         </section>
       </div>
-      <!-- Right column (sidebar) -->
+
+      <!-- Right column (Sidebar) -->
       <div class="space-y-6">
-        <!-- Score card -->
-        <div class="bg-elevated rounded-2xl border border-muted/50 p-6 text-center">
-          <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-br from-primary-500 to-primary-400 flex items-center justify-center mb-3 shadow-lg shadow-primary-500/20">
-            <span class="text-2xl font-bold text-white">{{ formattedScore }}</span>
+        <!-- Score Card -->
+        <div class="glass-surface-elevated rounded-3xl border border-[var(--glass-border)] p-6 text-center shadow-lg">
+          <div class="w-20 h-20 mx-auto rounded-2xl glass-surface flex items-center justify-center mb-3 shadow-xl ring-2 ring-primary-400/30">
+            <span class="text-3xl font-bold text-primary-400 font-mono">{{ formattedScore }}</span>
           </div>
-          <p class="text-xs text-toned mb-4">
-            {{ anime.scored_by ? `${anime.scored_by.toLocaleString()} votes` : 'No votes yet' }}
+          <p class="text-xs text-[var(--ui-text-toned)] mb-5 font-mono">
+            {{ anime.scored_by ? `${anime.scored_by.toLocaleString()} global votes` : 'No votes recorded' }}
           </p>
           <div class="grid grid-cols-2 gap-3">
             <div
               v-for="stat in statCards"
               :key="stat.label"
-              class="bg-default/50 rounded-xl p-3 text-center hover:bg-primary-500/10 transition-colors border border-muted/20"
+              class="glass-pill rounded-2xl p-3.5 text-center hover:border-primary-400/40 transition-colors"
             >
-              <UIcon :name="stat.icon" class="w-4.5 h-4.5 text-primary-400 mb-1" />
-              <p class="text-sm font-semibold text-highlighted">{{ stat.value }}</p>
-              <p class="text-[10px] text-toned uppercase tracking-wider">{{ stat.label }}</p>
+              <UIcon :name="stat.icon" class="w-4 h-4 text-primary-400 mb-1 mx-auto" />
+              <p class="text-sm font-bold text-[var(--ui-text-highlighted)] font-mono">{{ stat.value }}</p>
+              <p class="text-[10px] text-[var(--ui-text-toned)] uppercase tracking-wider font-mono font-semibold">{{ stat.label }}</p>
             </div>
           </div>
         </div>
-        <!-- Info card -->
-        <div class="bg-elevated rounded-2xl border border-muted/50 p-6">
+
+        <!-- Information Card -->
+        <div class="glass-surface rounded-3xl border border-[var(--glass-border)] p-6 shadow-sm">
           <div class="flex items-center gap-2 mb-4">
             <UIcon name="i-solar-info-square-linear" class="w-5 h-5 text-primary-400" />
-            <h2 class="text-base font-semibold text-highlighted tracking-tight">Information</h2>
+            <h2 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight">Information</h2>
           </div>
-          <dl class="space-y-3">
+          <dl class="space-y-3.5">
             <div
               v-for="row in infoRows"
               :key="row.label"
-              class="flex items-start gap-3 text-sm"
+              class="flex items-start gap-3 text-xs"
             >
-              <UIcon :name="row.icon" class="w-4 h-4 text-toned mt-0.5 flex-shrink-0" />
-              <div>
-                <dt class="text-toned text-xs uppercase tracking-wider">{{ row.label }}</dt>
-                <dd class="text-highlighted font-medium">{{ row.value }}</dd>
+              <UIcon :name="row.icon" class="w-4 h-4 text-[var(--ui-text-toned)] mt-0.5 flex-shrink-0" />
+              <div class="min-w-0 flex-1">
+                <dt class="text-[10px] text-[var(--ui-text-toned)] uppercase tracking-wider font-mono font-semibold">{{ row.label }}</dt>
+                <dd class="text-[var(--ui-text-highlighted)] font-bold truncate">{{ row.value }}</dd>
               </div>
             </div>
           </dl>
         </div>
+
         <!-- Studios -->
-        <div v-if="anime.studios?.length" class="bg-elevated rounded-2xl border border-muted/50 p-6">
+        <div v-if="anime.studios?.length" class="glass-surface rounded-3xl border border-[var(--glass-border)] p-6 shadow-sm">
           <div class="flex items-center gap-2 mb-3">
             <UIcon name="i-solar-buildings-2-linear" class="w-5 h-5 text-primary-400" />
-            <h2 class="text-base font-semibold text-highlighted tracking-tight">Studios</h2>
+            <h2 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight">Studios</h2>
           </div>
           <div class="flex flex-wrap gap-2">
             <span
               v-for="studio in anime.studios"
               :key="studio.mal_id"
-              class="text-sm font-medium text-primary-400 bg-primary-500/10 px-3 py-1.5 rounded-xl hover:bg-primary-500/20 transition-colors cursor-default"
+              class="text-xs font-bold text-primary-400 glass-chip px-3 py-1.5 rounded-xl cursor-default"
             >
               {{ studio.name }}
             </span>
           </div>
         </div>
-        <!-- Producers -->
-        <div v-if="anime.producers?.length" class="bg-elevated rounded-2xl border border-muted/50 p-6">
-          <div class="flex items-center gap-2 mb-3">
-            <UIcon name="i-solar-people-nearby-linear" class="w-5 h-5 text-primary-400" />
-            <h2 class="text-base font-semibold text-highlighted tracking-tight">Producers</h2>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span
-              v-for="prod in anime.producers"
-              :key="prod.mal_id"
-              class="text-xs text-toned bg-default/50 px-3 py-1.5 rounded-xl border border-muted"
-            >
-              {{ prod.name }}
-            </span>
-          </div>
-        </div>
-        <!-- Tags (Genres + Themes + Demographics) -->
-        <div
-          v-if="anime.genres?.length || anime.themes?.length || anime.demographics?.length"
-          class="bg-elevated rounded-2xl border border-muted/50 p-6"
-        >
-          <div class="flex items-center gap-2 mb-3">
-            <UIcon name="i-solar-tag-linear" class="w-5 h-5 text-primary-400" />
-            <h2 class="text-base font-semibold text-highlighted tracking-tight">Tags</h2>
-          </div>
-          <div class="flex flex-wrap gap-2">
-            <span
-              v-for="tag in [...(anime.genres || []), ...(anime.themes || []), ...(anime.demographics || [])]"
-              :key="tag.mal_id"
-              class="text-xs font-medium text-toned bg-default/50 px-3 py-1.5 rounded-full border border-muted hover:border-primary-500/30 hover:text-primary-400 transition-colors cursor-default"
-            >
-              {{ tag.name }}
-            </span>
-          </div>
-        </div>
-        <!-- Streaming -->
-        <div v-if="anime.streaming?.length" class="bg-elevated rounded-2xl border border-muted/50 p-6">
-          <div class="flex items-center gap-2 mb-3">
-            <UIcon name="i-solar-play-stream-linear" class="w-5 h-5 text-primary-400" />
-            <h2 class="text-base font-semibold text-highlighted tracking-tight">Streaming</h2>
-          </div>
-          <div class="space-y-2">
-            <a
-              v-for="link in anime.streaming"
-              :key="link.name"
-              :href="link.url"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="flex items-center justify-between gap-2 text-sm text-highlighted bg-elevated hover:bg-primary-500/10 px-4 py-2.5 rounded-xl border border-muted hover:border-primary-500/30 transition-all group"
-            >
-              <span class="font-medium">{{ link.name }}</span>
-              <UIcon name="i-solar-arrow-right-up-linear" class="w-4 h-4 text-toned group-hover:text-primary-400 transition-colors" />
-            </a>
-          </div>
-        </div>
-        <!-- External links -->
-        <div v-if="anime.external?.length" class="bg-elevated rounded-2xl border border-muted/50 p-6">
+
+        <!-- External & Streaming Links -->
+        <div v-if="anime.streaming?.length || anime.external?.length" class="glass-surface rounded-3xl border border-[var(--glass-border)] p-6 shadow-sm">
           <div class="flex items-center gap-2 mb-3">
             <UIcon name="i-solar-global-linear" class="w-5 h-5 text-primary-400" />
-            <h2 class="text-base font-semibold text-highlighted tracking-tight">External Links</h2>
+            <h2 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight">Official Links</h2>
           </div>
           <div class="space-y-2">
             <a
-              v-for="link in anime.external"
+              v-for="link in [...(anime.streaming || []), ...(anime.external || [])].slice(0, 8)"
               :key="link.name"
               :href="link.url"
               target="_blank"
               rel="noopener noreferrer"
-              class="flex items-center justify-between gap-2 text-sm text-highlighted bg-elevated hover:bg-primary-500/10 px-4 py-2.5 rounded-xl border border-muted hover:border-primary-500/30 transition-all group"
+              class="flex items-center justify-between gap-2 text-xs font-semibold text-[var(--ui-text-highlighted)] glass-pill hover:bg-white/10 px-3.5 py-2.5 rounded-xl border border-transparent hover:border-[var(--glass-border)] transition-all group"
             >
-              <span class="font-medium">{{ link.name }}</span>
-              <UIcon name="i-solar-arrow-right-up-linear" class="w-4 h-4 text-toned group-hover:text-primary-400 transition-colors" />
+              <span class="truncate">{{ link.name }}</span>
+              <UIcon name="i-solar-arrow-right-up-linear" class="w-3.5 h-3.5 text-[var(--ui-text-toned)] group-hover:text-primary-400 transition-colors" />
             </a>
           </div>
         </div>

@@ -5,10 +5,10 @@ import type { JikanAnime } from '~/types/anime'
 import { useAuth } from '~/composables/useAuth'
 
 useSeoMeta({
-  title: 'Koko - Anime Library',
-  ogTitle: 'Koko - Anime Library',
-  description: 'Explore the ultimate collection of anime movies and series on Koko.',
-  ogDescription: 'Explore the ultimate collection of anime movies and series on Koko.',
+  title: 'Koko — Modern Anime Library & Discovery Engine',
+  ogTitle: 'Koko — Modern Anime Library & Discovery Engine',
+  description: 'Explore, track, and catalog anime in an ultra-fast, cinematic glassmorphic interface.',
+  ogDescription: 'Explore, track, and catalog anime in an ultra-fast, cinematic glassmorphic interface.',
 })
 
 const auth = useAuth()
@@ -45,19 +45,19 @@ const genres = computed(() => {
       <div>
         <HeroSkeleton v-if="heroPending" />
         <HeroCarousel v-else-if="heroSlides.length" :slides="heroSlides" />
-        <div v-else class="min-h-[40dvh] flex flex-col items-center justify-center bg-elevated/40 rounded-3xl border border-muted/50 gap-2">
-          <p class="text-toned text-sm">Couldn't load current season.</p>
+        <div v-else class="min-h-[40dvh] flex flex-col items-center justify-center glass-surface rounded-3xl border border-[var(--glass-border)] gap-2">
+          <p class="text-[var(--ui-text-toned)] text-xs font-mono">Couldn't load current season.</p>
         </div>
       </div>
 
       <!-- Recommended Rail -->
       <AnimeRail 
-        title="Recommended" 
+        title="Recommended For You" 
         fetchUrl="/anime?order_by=score&sort=desc&limit=12" 
       />
 
       <!-- Genre Rails with CSS stagger delay -->
-      <div v-if="genresError" class="text-center py-6 text-sm text-toned/80 border border-dashed border-muted/50 rounded-2xl">
+      <div v-if="genresError" class="text-center py-6 text-xs text-[var(--ui-text-toned)] border border-dashed border-[var(--ui-border-muted)] rounded-2xl glass-pill">
         Genre rails unavailable
       </div>
       
@@ -84,20 +84,28 @@ const genres = computed(() => {
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 w-full items-center">
           <!-- Copy & CTAs -->
           <div class="lg:col-span-6 flex flex-col gap-6 md:gap-8 justify-center text-left">
-            <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-highlighted leading-[1.1]">
+            <div class="inline-flex items-center gap-2 glass-pill px-3 py-1 rounded-full w-fit">
+              <span class="w-2 h-2 rounded-full bg-primary-400 animate-pulse" />
+              <span class="text-xs font-bold text-primary-400 tracking-wider uppercase font-mono">v4.0 Glass Edition</span>
+            </div>
+
+            <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-[var(--ui-text-highlighted)] leading-[1.1]">
               Anime Tracking,<br>
-              <span class="text-primary">Cinematic & Fast.</span>
+              <span class="bg-gradient-to-r from-primary-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-sm">
+                Cinematic & Fast.
+              </span>
             </h1>
-            <p class="text-sm md:text-base text-toned leading-relaxed max-w-[50ch]">
-              Catalog series, track your watchlist, and explore collections in a stunning cinematic interface built for otakus.
+            <p class="text-sm md:text-base text-[var(--ui-text-toned)] leading-relaxed max-w-[48ch] font-normal">
+              Catalog series, track your watchlist, and explore collections in a stunning glassmorphic interface engineered for anime enthusiasts.
             </p>
             <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-4 mt-2">
               <UButton
-                to="/register"
-                label="Join KoKo"
+                to="/login"
+                label="Get Started Free"
                 size="lg"
                 color="primary"
-                class="rounded-full font-semibold shadow-md shadow-primary/10 px-8 py-3.5 text-center justify-center cursor-pointer"
+                icon="i-solar-rocket-bold"
+                class="rounded-2xl font-bold shadow-xl shadow-primary-500/25 px-8 py-3.5 text-center justify-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
               />
               <UButton
                 to="/browse"
@@ -105,116 +113,125 @@ const genres = computed(() => {
                 size="lg"
                 variant="ghost"
                 color="neutral"
-                class="rounded-full font-medium px-6 py-3.5 text-center justify-center cursor-pointer"
+                icon="i-solar-compass-linear"
+                class="glass-pill rounded-2xl font-semibold px-6 py-3.5 text-center justify-center cursor-pointer hover:bg-white/10 hover:scale-[1.02] active:scale-95 transition-all"
               />
             </div>
           </div>
 
-          <!-- Hero Image with Refraction Glow -->
+          <!-- Hero Image with Glass Refraction Glow -->
           <div class="lg:col-span-6 relative w-full flex items-center justify-center">
-            <div class="absolute inset-0 bg-primary/10 dark:bg-primary/5 rounded-[40px] blur-3xl -z-10" />
-            <div class="w-full relative rounded-3xl overflow-hidden shadow-2xl border border-muted/50 bg-elevated transform transition-all duration-700 hover:scale-[1.01] hover:shadow-primary/5">
+            <div class="absolute inset-0 bg-primary-500/20 rounded-[40px] blur-3xl -z-10" />
+            <div class="w-full relative rounded-3xl overflow-hidden glass-surface border border-[var(--glass-border)]  transform transition-all duration-700 hover:scale-[1.01] group">
               <NuxtImg
                 src="/koko_hero.jpg"
                 alt="KoKo Cinematic Viewport Preview"
-                class="w-full h-full object-cover aspect-[16/10] md:aspect-[16/9] lg:aspect-[4/3]"
+                class="w-full h-full object-cover aspect-[16/10] md:aspect-[16/9] lg:aspect-[4/3] transition-transform duration-700 group-hover:scale-105"
               />
+              <div class="absolute inset-0 bg-gradient-to-t from-[var(--ui-overlay)]/60 via-transparent to-transparent pointer-events-none" />
+              <div class="absolute bottom-4 left-4 right-4 glass-chip px-4 py-2.5 rounded-xl flex items-center justify-between text-white text-xs font-mono">
+                <span class="flex items-center gap-2">
+                  <UIcon name="i-solar-play-circle-bold" class="w-4 h-4 text-primary-400" />
+                  Instant Trailer Previews
+                </span>
+                <span class="text-[var(--ui-text-toned)] text-[10px]">Zero Latency</span>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
       <!-- Logo Wall -->
-      <section class="py-10 max-w-7xl mx-auto px-6 w-full border-t border-muted/50 flex flex-col md:flex-row items-center justify-between gap-6 opacity-60">
-        <span class="text-[10px] font-mono uppercase tracking-wider text-toned">Powered by community standards</span>
+      <section class="py-10 max-w-7xl mx-auto px-6 w-full border-t border-[var(--glass-border-subtle)] flex flex-col md:flex-row items-center justify-between gap-6 opacity-70">
+        <span class="text-[11px] font-mono uppercase tracking-wider text-[var(--ui-text-toned)]">Powered by community standards</span>
         <div class="flex flex-wrap items-center gap-8 justify-center select-none dark:invert dark:brightness-100">
-          <img src="https://cdn.simpleicons.org/myanimelist/6B7280" alt="MyAnimeList" class="h-5 opacity-70 hover:opacity-100 transition-opacity" />
-          <img src="https://cdn.simpleicons.org/nuxt/6B7280" alt="Nuxt" class="h-5 opacity-70 hover:opacity-100 transition-opacity" />
-          <img src="https://cdn.simpleicons.org/vuedotjs/6B7280" alt="Vue" class="h-5 opacity-70 hover:opacity-100 transition-opacity" />
-          <img src="https://cdn.simpleicons.org/tailwindcss/6B7280" alt="Tailwind CSS" class="h-5 opacity-70 hover:opacity-100 transition-opacity" />
+          <img src="https://cdn.simpleicons.org/myanimelist/6B7280" alt="MyAnimeList" class="h-5 opacity-80 hover:opacity-100 transition-opacity" />
+          <img src="https://cdn.simpleicons.org/nuxt/6B7280" alt="Nuxt" class="h-5 opacity-80 hover:opacity-100 transition-opacity" />
+          <img src="https://cdn.simpleicons.org/vuedotjs/6B7280" alt="Vue" class="h-5 opacity-80 hover:opacity-100 transition-opacity" />
+          <img src="https://cdn.simpleicons.org/tailwindcss/6B7280" alt="Tailwind CSS" class="h-5 opacity-80 hover:opacity-100 transition-opacity" />
         </div>
       </section>
 
-      <!-- Features Section (Bento Grid) -->
-      <section id="features" class="py-20 border-y border-muted/50 bg-elevated/20 transition-all duration-200">
+      <!-- Features Section (Glass Bento Grid) -->
+      <section id="features" class="py-20 border-y border-[var(--glass-border-subtle)] relative">
         <div class="max-w-7xl mx-auto px-6 w-full flex flex-col gap-12">
           <div class="max-w-2xl">
-            <h2 class="text-3xl font-bold tracking-tight text-highlighted sm:text-4xl leading-tight">
-              Designed for the Ultimate View Experience
+            <h2 class="text-3xl font-bold tracking-tight text-[var(--ui-text-highlighted)] sm:text-4xl leading-tight">
+              Crafted for the Ultimate Viewing Experience
             </h2>
-            <p class="text-sm text-toned mt-3 leading-relaxed">
-              Say goodbye to outdated grids and endless clutter. KoKo is built from the ground up for speed, aesthetics, and simplicity.
+            <p class="text-xs md:text-sm text-[var(--ui-text-toned)] mt-3 leading-relaxed font-normal">
+              Say goodbye to outdated tables and endless clutter. KoKo is built with frosted glass ergonomics, instant proxy caching, and responsive media rails.
             </p>
           </div>
 
-          <!-- Bento Grid -->
+          <!-- Bento Grid with Frosted Glass Panels -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Feature 1: Cinematic UI (col-span-2) -->
-            <div class="md:col-span-2 bg-default border border-muted/50 rounded-3xl p-8 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:border-primary/40 hover:shadow-md transition-all duration-300 relative overflow-hidden group min-h-[340px]">
-              <div class="absolute -right-10 -bottom-10 w-72 h-44 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors" />
+            <div class="md:col-span-2 glass-surface-elevated rounded-3xl p-8 flex flex-col justify-between border border-[var(--glass-border)] shadow-xl hover:border-primary-400/50 hover:shadow-[var(--shadow-diffuse-accent)] transition-all duration-300 relative overflow-hidden group min-h-[340px]">
+              <div class="absolute -right-10 -bottom-10 w-72 h-44 bg-primary-500/10 rounded-full blur-3xl group-hover:bg-primary-500/20 transition-colors" />
               <div class="flex flex-col gap-3 max-w-md z-10">
-                <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-2">
+                <div class="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-primary-400 mb-2 shadow-inner">
                   <UIcon name="i-solar-gallery-wide-linear" class="w-5 h-5" />
                 </div>
-                <h3 class="text-lg font-bold text-highlighted">Cinematic Poster Interface</h3>
-                <p class="text-xs text-toned leading-relaxed">
-                  Experience anime like never before. High-resolution poster cards, smooth Ken Burns image scaling, and fluid animations mimic premium streaming libraries for a gorgeous distraction-free setup.
+                <h3 class="text-lg font-bold text-[var(--ui-text-highlighted)]">Cinematic Poster Interface</h3>
+                <p class="text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
+                  Experience anime with high-resolution poster cards, smooth Ken Burns scaling, and fluid micro-animations mirroring premium streaming platforms.
                 </p>
               </div>
               <!-- Poster Mockup inside the bento cell -->
               <div class="mt-6 flex gap-3 overflow-hidden select-none z-10 translate-y-2 group-hover:translate-y-0 transition-transform duration-500">
-                <div v-for="i in 3" :key="i" class="w-24 flex-shrink-0 aspect-[3/4] bg-elevated rounded-xl border border-muted/50 overflow-hidden relative shadow-sm">
-                  <div class="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent z-10" />
-                  <div class="absolute bottom-2 left-2 right-2 text-[8px] font-medium text-white truncate">Anime Title {{ i }}</div>
+                <div v-for="i in 3" :key="i" class="w-24 flex-shrink-0 aspect-[3/4] glass-surface rounded-xl border border-[var(--glass-border)] overflow-hidden relative shadow-md">
+                  <div class="absolute inset-0 bg-gradient-to-t from-[var(--ui-overlay)]/80 to-transparent z-10" />
+                  <div class="absolute bottom-2 left-2 right-2 text-[9px] font-semibold text-white truncate font-mono">Season {{ i }}</div>
                 </div>
               </div>
             </div>
 
             <!-- Feature 2: Personalized Watchlist (col-span-1) -->
-            <div class="bg-default border border-muted/50 rounded-3xl p-8 flex flex-col justify-between shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:border-primary/40 hover:shadow-md transition-all duration-300 relative overflow-hidden group min-h-[340px]">
-              <div class="absolute -left-10 -bottom-10 w-52 h-52 bg-primary/5 rounded-full blur-2xl group-hover:bg-primary/10 transition-colors" />
+            <div class="glass-surface-elevated rounded-3xl p-8 flex flex-col justify-between border border-[var(--glass-border)] shadow-xl hover:border-primary-400/50 hover:shadow-[var(--shadow-diffuse-accent)] transition-all duration-300 relative overflow-hidden group min-h-[340px]">
+              <div class="absolute -left-10 -bottom-10 w-52 h-52 bg-primary-500/10 rounded-full blur-3xl group-hover:bg-primary-500/20 transition-colors" />
               <div class="flex flex-col gap-3 z-10">
-                <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-2">
+                <div class="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-primary-400 mb-2 shadow-inner">
                   <UIcon name="i-solar-bookmark-bold-duotone" class="w-5 h-5" />
                 </div>
-                <h3 class="text-lg font-bold text-highlighted">Interactive Watchlist</h3>
-                <p class="text-xs text-toned leading-relaxed">
-                  One-click tracking. Save series, manage your watch history, and plan what to watch next. Everything syncs instantly with your personal profile.
+                <h3 class="text-lg font-bold text-[var(--ui-text-highlighted)]">Instant Watchlist</h3>
+                <p class="text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
+                  One-click tracking. Save series, manage your collection, and keep titles organized across all your devices.
                 </p>
               </div>
               <!-- Watchlist visual indicator -->
-              <div class="mt-6 bg-elevated border border-muted rounded-2xl p-4 flex flex-col gap-2.5 z-10 transform group-hover:scale-[1.02] transition-transform duration-300 shadow-sm">
+              <div class="mt-6 glass-surface border border-[var(--glass-border)] rounded-2xl p-4 flex flex-col gap-2.5 z-10 transform group-hover:scale-[1.02] transition-transform duration-300 shadow-md">
                 <div class="flex items-center justify-between">
-                  <span class="text-[10px] font-semibold text-highlighted">Currently Watching</span>
-                  <span class="text-[8px] bg-primary/10 text-primary px-2 py-0.5 rounded-full font-medium">12 Series</span>
+                  <span class="text-[11px] font-bold text-[var(--ui-text-highlighted)] font-mono">Currently Watching</span>
+                  <span class="text-[9px] bg-primary-500/20 text-primary-300 px-2 py-0.5 rounded-full font-mono font-bold">12 Series</span>
                 </div>
-                <div class="w-full bg-default h-1 rounded-full overflow-hidden">
-                  <div class="bg-primary w-2/3 h-full rounded-full" />
+                <div class="w-full bg-[var(--ui-overlay)]/20 dark:bg-white/10 h-1.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-primary-400 to-primary-500 w-2/3 h-full rounded-full " />
                 </div>
               </div>
             </div>
 
             <!-- Feature 3: Instant Discovery (col-span-3) -->
-            <div class="md:col-span-3 bg-default border border-muted/50 rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 shadow-[0_4px_20px_rgba(0,0,0,0.01)] hover:border-primary/40 hover:shadow-md transition-all duration-300 relative overflow-hidden group">
+            <div class="md:col-span-3 glass-surface-elevated rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 border border-[var(--glass-border)] shadow-xl hover:border-primary-400/50 hover:shadow-[var(--shadow-diffuse-accent)] transition-all duration-300 relative overflow-hidden group">
               <div class="flex flex-col gap-3 max-w-lg z-10">
-                <div class="w-10 h-10 rounded-2xl bg-primary/10 flex items-center justify-center text-primary mb-2">
+                <div class="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-primary-400 mb-2 shadow-inner">
                   <UIcon name="i-solar-magnifer-linear" class="w-5 h-5" />
                 </div>
-                <h3 class="text-lg font-bold text-highlighted">Fast Browsing & Filtering</h3>
-                <p class="text-xs text-toned leading-relaxed">
-                  Find what you want, immediately. Highly optimized search querying with instant key-debouncing and genre intersections. Filters anime matching your mood without page refreshes.
+                <h3 class="text-lg font-bold text-[var(--ui-text-highlighted)]">Fast Browsing & Filtering</h3>
+                <p class="text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
+                  Find what you want immediately. Optimized debounce querying with instant genre intersections and sub-second page transitions.
                 </p>
               </div>
               <!-- Search Mockup -->
-              <div class="w-full md:w-80 bg-elevated border border-muted/50 rounded-2xl p-4 flex flex-col gap-3 z-10 shrink-0 transform group-hover:translate-x-1 transition-transform duration-300">
-                <div class="flex items-center gap-2 bg-default border border-muted rounded-full px-3 py-1.5 text-[10px] text-toned">
-                  <UIcon name="i-solar-magnifer-linear" class="w-3.5 h-3.5 text-primary" />
-                  <span>Action, Sci-Fi...</span>
+              <div class="w-full md:w-80 glass-surface border border-[var(--glass-border)] rounded-2xl p-4 flex flex-col gap-3 z-10 shrink-0 transform group-hover:translate-x-1 transition-transform duration-300 shadow-md">
+                <div class="flex items-center gap-2 glass-pill rounded-full px-3 py-1.5 text-[11px] text-[var(--ui-text-toned)] font-mono">
+                  <UIcon name="i-solar-magnifer-linear" class="w-3.5 h-3.5 text-primary-400" />
+                  <span>Action, Cyberpunk...</span>
                 </div>
-                <div class="flex flex-wrap gap-1.5">
-                  <span class="text-[9px] bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full font-medium">Action</span>
-                  <span class="text-[9px] bg-primary/10 text-primary border border-primary/20 px-2 py-0.5 rounded-full font-medium">Sci-Fi</span>
-                  <span class="text-[9px] bg-elevated border border-muted text-toned px-2 py-0.5 rounded-full font-medium">+12 more</span>
+                <div class="flex flex-wrap gap-1.5 font-mono">
+                  <span class="text-[10px] bg-primary-500/20 text-primary-300 border border-primary-400/40 px-2 py-0.5 rounded-lg font-semibold">Action</span>
+                  <span class="text-[10px] bg-primary-500/20 text-primary-300 border border-primary-400/40 px-2 py-0.5 rounded-lg font-semibold">Sci-Fi</span>
+                  <span class="text-[10px] glass-pill text-[var(--ui-text-toned)] px-2 py-0.5 rounded-lg">+14 genres</span>
                 </div>
               </div>
             </div>
@@ -226,98 +243,98 @@ const genres = computed(() => {
       <section id="why-koko" class="py-20 transition-all duration-200">
         <div class="max-w-7xl mx-auto px-6 w-full grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
           <div class="lg:col-span-5 flex flex-col gap-4">
-            <h2 class="text-3xl font-bold tracking-tight text-highlighted sm:text-4xl leading-tight">
-              Why use KoKo instead of others?
+            <h2 class="text-3xl font-bold tracking-tight text-[var(--ui-text-highlighted)] sm:text-4xl leading-tight">
+              Why use KoKo?
             </h2>
-            <p class="text-sm text-toned leading-relaxed">
-              Traditional anime trackers are cluttered, slow, and feel like Excel spreadsheets. KoKo is designed for people who appreciate design details, fast loading times, and a focused workspace.
+            <p class="text-xs md:text-sm text-[var(--ui-text-toned)] leading-relaxed font-normal">
+              Traditional anime portals are cluttered, slow, and feel like complex spreadsheets. KoKo is built for people who appreciate design details, speed, and immersive visuals.
             </p>
           </div>
 
-          <!-- Comparison points layout -->
-          <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-8">
-            <div class="flex flex-col gap-3 p-6 bg-elevated/40 border border-muted/30 rounded-3xl hover:border-primary/20 transition-all">
-              <div class="text-primary"><UIcon name="i-solar-star-bold" class="w-6 h-6" /></div>
-              <h4 class="text-base font-bold text-highlighted">Cinematic Over Metadata</h4>
-              <p class="text-xs text-toned leading-relaxed">
-                Instead of overwhelming you with wall-to-wall textual statistics, we prioritize large high-resolution posters, visual backdrops, and immersive slides.
+          <!-- Comparison Cards Layout -->
+          <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
+            <div class="flex flex-col gap-3 p-6 glass-surface border border-[var(--glass-border)] rounded-3xl hover:border-primary-400/40 hover:shadow-lg transition-all">
+              <div class="text-primary-400"><UIcon name="i-solar-star-bold" class="w-6 h-6" /></div>
+              <h4 class="text-sm md:text-base font-bold text-[var(--ui-text-highlighted)]">Cinematic Over Metadata</h4>
+              <p class="text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
+                Instead of overwhelming tables, we prioritize high-resolution backdrops, clean trailer playback, and fluid artwork transitions.
               </p>
             </div>
 
-            <div class="flex flex-col gap-3 p-6 bg-elevated/40 border border-muted/30 rounded-3xl hover:border-primary/20 transition-all">
-              <div class="text-primary"><UIcon name="i-solar-bolt-bold" class="w-6 h-6" /></div>
-              <h4 class="text-base font-bold text-highlighted">Zero Page Reloads</h4>
-              <p class="text-xs text-toned leading-relaxed">
-                Search and genre selections update instantly in-place. No clicking "Next page" and waiting for database rebuilds.
+            <div class="flex flex-col gap-3 p-6 glass-surface border border-[var(--glass-border)] rounded-3xl hover:border-primary-400/40 hover:shadow-lg transition-all">
+              <div class="text-primary-400"><UIcon name="i-solar-bolt-bold" class="w-6 h-6" /></div>
+              <h4 class="text-sm md:text-base font-bold text-[var(--ui-text-highlighted)]">Zero Page Jumps</h4>
+              <p class="text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
+                Search queries and genre filters update smoothly in-place with instant client transitions.
               </p>
             </div>
 
-            <div class="flex flex-col gap-3 p-6 bg-elevated/40 border border-muted/30 rounded-3xl hover:border-primary/20 transition-all">
-              <div class="text-primary"><UIcon name="i-solar-shield-bold" class="w-6 h-6" /></div>
-              <h4 class="text-base font-bold text-highlighted">Focused Watchlist</h4>
-              <p class="text-xs text-toned leading-relaxed">
-                Add items in one click. No complicated forms where you must input episodes watched, status, score, start date, and end date just to save a title.
+            <div class="flex flex-col gap-3 p-6 glass-surface border border-[var(--glass-border)] rounded-3xl hover:border-primary-400/40 hover:shadow-lg transition-all">
+              <div class="text-primary-400"><UIcon name="i-solar-shield-bold" class="w-6 h-6" /></div>
+              <h4 class="text-sm md:text-base font-bold text-[var(--ui-text-highlighted)]">One-Click Tracking</h4>
+              <p class="text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
+                Bookmark and unbookmark directly from any card or hero banner without tedious multi-field form dialogs.
               </p>
             </div>
 
-            <div class="flex flex-col gap-3 p-6 bg-elevated/40 border border-muted/30 rounded-3xl hover:border-primary/20 transition-all">
-              <div class="text-primary"><UIcon name="i-solar-widget-6-bold" class="w-6 h-6" /></div>
-              <h4 class="text-base font-bold text-highlighted">Clean and Open Source</h4>
-              <p class="text-xs text-toned leading-relaxed">
-                No intrusive ads, tracking scripts, or clutter. Completely free and open-source code powered directly by public Jikan APIs.
+            <div class="flex flex-col gap-3 p-6 glass-surface border border-[var(--glass-border)] rounded-3xl hover:border-primary-400/40 hover:shadow-lg transition-all">
+              <div class="text-primary-400"><UIcon name="i-solar-widget-6-bold" class="w-6 h-6" /></div>
+              <h4 class="text-sm md:text-base font-bold text-[var(--ui-text-highlighted)]">Clean & Ad-Free</h4>
+              <p class="text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
+                No intrusive third-party popups, tracking ads, or spam. Just clean, open-source performance.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      <!-- FAQ Section -->
-      <section id="faq" class="py-20 border-t border-muted/50 bg-elevated/20 transition-all duration-200">
+      <!-- FAQ Section (Glass Accordion) -->
+      <section id="faq" class="py-20 border-t border-[var(--glass-border-subtle)] relative">
         <div class="max-w-4xl mx-auto px-6 w-full flex flex-col gap-10">
           <div class="text-center max-w-2xl mx-auto">
-            <h2 class="text-3xl font-bold tracking-tight text-highlighted sm:text-4xl">
+            <h2 class="text-3xl font-bold tracking-tight text-[var(--ui-text-highlighted)] sm:text-4xl">
               Frequently Asked Questions
             </h2>
-            <p class="text-sm text-toned mt-3">
-              Everything you need to know about the KoKo anime library tracker.
+            <p class="text-xs md:text-sm text-[var(--ui-text-toned)] mt-3 font-normal">
+              Everything you need to know about the KoKo platform.
             </p>
           </div>
 
-          <!-- Accordion/Details style list -->
+          <!-- Accordion Details with Glass Styling -->
           <div class="flex flex-col gap-4">
-            <details class="group bg-default border border-muted/50 rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer select-none">
-              <summary class="flex items-center justify-between font-semibold text-highlighted text-sm md:text-base">
+            <details class="group glass-surface border border-[var(--glass-border)] rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer select-none shadow-sm transition-all hover:border-primary-400/30">
+              <summary class="flex items-center justify-between font-bold text-[var(--ui-text-highlighted)] text-sm md:text-base">
                 <span>Is KoKo free to use?</span>
-                <span class="transition-transform duration-300 group-open:rotate-180 text-toned">
+                <span class="transition-transform duration-300 group-open:rotate-180 text-[var(--ui-text-toned)]">
                   <UIcon name="i-solar-alt-arrow-down-linear" class="w-5 h-5" />
                 </span>
               </summary>
-              <p class="mt-4 text-xs text-toned leading-relaxed">
+              <p class="mt-4 text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
                 Yes! KoKo is completely free. We do not run ads or sell user data. The project is an open source study in designing premium user experiences.
               </p>
             </details>
 
-            <details class="group bg-default border border-muted/50 rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer select-none">
-              <summary class="flex items-center justify-between font-semibold text-highlighted text-sm md:text-base">
-                <span>Do I need a MyAnimeList account?</span>
-                <span class="transition-transform duration-300 group-open:rotate-180 text-toned">
+            <details class="group glass-surface border border-[var(--glass-border)] rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer select-none shadow-sm transition-all hover:border-primary-400/30">
+              <summary class="flex items-center justify-between font-bold text-[var(--ui-text-highlighted)] text-sm md:text-base">
+                <span>Do I need an external account?</span>
+                <span class="transition-transform duration-300 group-open:rotate-180 text-[var(--ui-text-toned)]">
                   <UIcon name="i-solar-alt-arrow-down-linear" class="w-5 h-5" />
                 </span>
               </summary>
-              <p class="mt-4 text-xs text-toned leading-relaxed">
-                No, you do not need an external account. You can sign up directly on KoKo to manage and sync your watchlist locally on our servers.
+              <p class="mt-4 text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
+                No external account is required. You can sign up directly on KoKo to store and sync your watchlist locally across sessions.
               </p>
             </details>
 
-            <details class="group bg-default border border-muted/50 rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer select-none">
-              <summary class="flex items-center justify-between font-semibold text-highlighted text-sm md:text-base">
-                <span>Where does the data come from?</span>
-                <span class="transition-transform duration-300 group-open:rotate-180 text-toned">
+            <details class="group glass-surface border border-[var(--glass-border)] rounded-2xl p-6 [&_summary::-webkit-details-marker]:hidden cursor-pointer select-none shadow-sm transition-all hover:border-primary-400/30">
+              <summary class="flex items-center justify-between font-bold text-[var(--ui-text-highlighted)] text-sm md:text-base">
+                <span>Where does anime metadata come from?</span>
+                <span class="transition-transform duration-300 group-open:rotate-180 text-[var(--ui-text-toned)]">
                   <UIcon name="i-solar-alt-arrow-down-linear" class="w-5 h-5" />
                 </span>
               </summary>
-              <p class="mt-4 text-xs text-toned leading-relaxed">
-                All data is powered by the Jikan API, which parses MyAnimeList's extensive public database. This ensures our library is always up-to-date with the latest seasonal airing titles, studios, and genres.
+              <p class="mt-4 text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
+                All data is fetched through our high-speed Go proxy cache interfacing with the open Jikan REST v4 API.
               </p>
             </details>
           </div>
@@ -326,27 +343,27 @@ const genres = computed(() => {
 
       <!-- Final CTA Section -->
       <section class="py-24 max-w-7xl mx-auto px-6 w-full">
-        <div class="relative bg-primary/5 dark:bg-primary/10 border border-primary/20 rounded-3xl p-12 md:p-16 flex flex-col items-center text-center gap-6 overflow-hidden">
-          <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-primary/10 rounded-full blur-3xl" />
-          <div class="absolute -left-20 -top-20 w-80 h-80 bg-primary/10 rounded-full blur-3xl" />
+        <div class="relative glass-surface-elevated border border-[var(--glass-border)] rounded-3xl p-12 md:p-16 flex flex-col items-center text-center gap-6 overflow-hidden ">
+          <div class="absolute -right-20 -bottom-20 w-80 h-80 bg-primary-500/15 rounded-full blur-3xl" />
+          <div class="absolute -left-20 -top-20 w-80 h-80 bg-cyan-500/15 rounded-full blur-3xl" />
           
-          <div class="w-12 h-12 rounded-full bg-primary/20 flex items-center justify-center text-primary mb-2 animate-bounce">
+          <div class="w-12 h-12 rounded-2xl glass-pill flex items-center justify-center text-primary-400 mb-2 shadow-inner">
             <UIcon name="i-solar-heart-bold" class="w-6 h-6" />
           </div>
 
-          <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-highlighted leading-tight max-w-xl">
+          <h2 class="text-3xl md:text-4xl font-bold tracking-tight text-[var(--ui-text-highlighted)] leading-tight max-w-xl">
             Ready to Experience Anime Differently?
           </h2>
-          <p class="text-sm text-toned max-w-md">
-            Join the KoKo community today. Set up your watchlist, track your favorite series, and find your next watch in seconds.
+          <p class="text-xs md:text-sm text-[var(--ui-text-toned)] max-w-md font-normal">
+            Join KoKo today. Organize your collection, discover new seasons, and enjoy a clean cinematic interface.
           </p>
           <div class="flex flex-col sm:flex-row items-center gap-4 mt-2">
             <UButton
-              to="/register"
+              to="/login"
               label="Join KoKo"
               size="lg"
               color="primary"
-              class="rounded-full font-semibold shadow-md shadow-primary/10 px-8 py-3.5 cursor-pointer"
+              class="rounded-2xl font-bold shadow-xl shadow-primary-500/25 px-8 py-3.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
             />
             <UButton
               to="/browse"
@@ -354,7 +371,7 @@ const genres = computed(() => {
               size="lg"
               variant="ghost"
               color="neutral"
-              class="rounded-full font-medium px-6 py-3.5 cursor-pointer"
+              class="glass-pill rounded-2xl font-semibold px-6 py-3.5 cursor-pointer hover:bg-white/10 hover:scale-[1.02] active:scale-95 transition-all"
             />
           </div>
         </div>
@@ -366,13 +383,13 @@ const genres = computed(() => {
 <style scoped>
 .staggered-rail {
   animation: fadeIn 0.6s ease-out both;
-  animation-delay: calc(var(--i) * 100ms);
+  animation-delay: calc(var(--i) * 80ms);
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(12px);
   }
   to {
     opacity: 1;

@@ -80,81 +80,77 @@ onBeforeUnmount(() => {
 
 <template>
   <div class="relative" ref="dropdownRef">
-    <UButton
-      icon="i-solar-filter-linear"
-      trailing-icon="i-solar-alt-arrow-down-linear"
-      color="neutral"
-      variant="outline"
-      class="rounded-xl px-4 py-2.5 min-h-[44px] text-sm font-medium border-muted/80 bg-elevated hover:bg-default text-highlighted transition-all duration-200 cursor-pointer"
+    <button
+      type="button"
+      class="glass-surface hover:glass-surface-elevated rounded-xl px-4 py-2.5 min-h-[44px] text-sm font-semibold text-[var(--ui-text-highlighted)] transition-all duration-200 cursor-pointer flex items-center gap-2 border border-[var(--glass-border)] shadow-sm hover:border-primary-500/40 "
       aria-haspopup="listbox"
       :aria-expanded="isOpen"
       @click="isOpen = !isOpen"
     >
+      <UIcon name="i-solar-filter-linear" class="w-4 h-4 text-primary-400" />
       <span>{{ selectedGenreIds.length > 0 ? 'Genres' : 'Filter by Genre' }}</span>
-      <UBadge
+      <span
         v-if="selectedGenreIds.length > 0"
-        size="sm"
-        color="primary"
-        variant="solid"
-        class="rounded-full px-1.5 py-0.5 text-xs font-semibold"
+        class="bg-primary-500 text-white rounded-full px-2 py-0.5 text-[10px] font-mono font-bold "
       >
         {{ selectedGenreIds.length }}
-      </UBadge>
-    </UButton>
+      </span>
+      <UIcon name="i-solar-alt-arrow-down-linear" class="w-3.5 h-3.5 text-[var(--ui-text-toned)] ml-1 transition-transform" :class="{ 'rotate-180': isOpen }" />
+    </button>
 
     <Transition
       enter-active-class="transition-all duration-200 ease-out"
       enter-from-class="opacity-0 scale-95 -translate-y-2"
       enter-to-class="opacity-100 scale-100 translate-y-0"
-      leave-active-class="transition-all duration-200 ease-in"
+      leave-active-class="transition-all duration-150 ease-in"
       leave-from-class="opacity-100 scale-100 translate-y-0"
       leave-to-class="opacity-0 scale-95 -translate-y-2"
     >
       <div
         v-show="isOpen"
-        class="absolute right-0 mt-2 w-80 md:w-96 rounded-2xl p-4 shadow-lg bg-elevated border border-muted z-50"
+        class="absolute right-0 mt-2 w-80 md:w-96 rounded-2xl p-4 glass-surface-elevated border border-[var(--glass-border)] z-50 "
       >
-        <div class="flex items-center justify-between mb-3 pb-2 border-b border-muted">
-          <span class="text-xs font-semibold text-toned uppercase tracking-wider">Genres</span>
+        <div class="flex items-center justify-between mb-3 pb-2 border-b border-[var(--glass-border-subtle)]">
+          <span class="text-xs font-bold text-[var(--ui-text-highlighted)] uppercase tracking-wider">Select Genres</span>
           <button
             v-if="selectedGenreIds.length > 0"
             type="button"
-            class="text-xs font-semibold text-primary hover:text-primary/80 transition-colors cursor-pointer"
+            class="text-xs font-bold text-primary-400 hover:text-primary-300 transition-colors cursor-pointer"
             @click="clearGenres"
           >
             Clear all
           </button>
         </div>
 
-        <div v-if="loading" class="flex flex-col items-center justify-center py-8 text-toned">
-          <UIcon name="i-solar-spinner-linear" class="w-6 h-6 animate-spin mb-2" />
-          <span class="text-xs">Loading genres...</span>
+        <div v-if="loading" class="flex flex-col items-center justify-center py-8 text-[var(--ui-text-toned)]">
+          <UIcon name="i-solar-spinner-linear" class="w-6 h-6 animate-spin mb-2 text-primary-400" />
+          <span class="text-xs font-semibold">Loading genres...</span>
         </div>
 
-        <div v-else-if="genres.length === 0" class="text-sm text-toned text-center py-4">
+        <div v-else-if="genres.length === 0" class="text-sm text-[var(--ui-text-toned)] text-center py-4">
           No genres found.
         </div>
 
-        <div v-else class="flex flex-wrap gap-2 max-h-60 overflow-y-auto pr-1 scrollbar-none">
+        <div v-else class="flex flex-wrap gap-2 max-h-64 overflow-y-auto pr-1 scrollbar-none">
           <button
             v-for="genre in genres"
             :key="genre.mal_id"
             type="button"
             :class="[
-              'flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-medium transition-all duration-200 select-none cursor-pointer min-h-[44px]',
+              'flex items-center gap-2 px-3 py-2 rounded-xl text-xs font-semibold transition-all duration-200 select-none cursor-pointer',
               selectedGenreIds.includes(genre.mal_id)
-                ? 'bg-primary/10 border border-primary/50 text-primary font-semibold'
-                : 'bg-default border border-muted text-toned hover:bg-elevated hover:text-highlighted'
+                ? 'bg-primary-500/20 border border-primary-400 text-primary-300 font-bold '
+                : 'glass-pill text-[var(--ui-text-toned)] hover:text-[var(--ui-text-highlighted)] hover:bg-white/10 hover:border-white/20'
             ]"
             @click="toggleGenre(genre.mal_id)"
           >
             <UIcon
               v-if="selectedGenreIds.includes(genre.mal_id)"
               name="i-solar-check-circle-bold"
-              class="w-4 h-4 text-primary"
+              class="w-3.5 h-3.5 text-primary-400"
             />
             <span>{{ genre.name }}</span>
-            <span class="text-[10px] opacity-60">({{ genre.count }})</span>
+            <span class="text-[10px] opacity-70 font-mono">({{ genre.count }})</span>
           </button>
         </div>
       </div>
