@@ -121,14 +121,14 @@ const scroll = (direction: 'left' | 'right') => {
 
       <!-- Floating Hover Navigation Controls -->
       <button 
-        class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full glass-chip text-white flex items-center justify-center opacity-0 group-hover/rail:opacity-100 transition-all duration-300 z-20 cursor-pointer shadow-xl hover:scale-110 active:scale-95 hidden sm:flex"
+        class="absolute left-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full glass-chip text-white flex items-center justify-center opacity-0 group-hover/rail:opacity-100 transition-all duration-300 z-20 cursor-pointer shadow-[var(--shadow-diffuse-lg)] hover:scale-110 active:scale-95 hidden sm:flex"
         @click="scroll('left')"
         aria-label="Scroll left"
       >
         <UIcon name="i-solar-alt-arrow-left-linear" class="w-4 h-4" />
       </button>
       <button 
-        class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full glass-chip text-white flex items-center justify-center opacity-0 group-hover/rail:opacity-100 transition-all duration-300 z-20 cursor-pointer shadow-xl hover:scale-110 active:scale-95 hidden sm:flex"
+        class="absolute right-3 top-1/2 -translate-y-1/2 w-9 h-9 rounded-full glass-chip text-white flex items-center justify-center opacity-0 group-hover/rail:opacity-100 transition-all duration-300 z-20 cursor-pointer shadow-[var(--shadow-diffuse-lg)] hover:scale-110 active:scale-95 hidden sm:flex"
         @click="scroll('right')"
         aria-label="Scroll right"
       >

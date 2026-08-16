@@ -146,7 +146,7 @@ const handleRegister = async () => {
           <UButton
             type="submit"
             color="primary"
-            class="w-full py-3.5 mt-4 rounded-2xl flex items-center justify-center font-bold shadow-xl shadow-primary-500/25 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all"
+            class="w-full py-3.5 mt-4 rounded-2xl flex items-center justify-center font-bold shadow-[var(--shadow-diffuse-accent)] cursor-pointer hover:scale-[1.01] active:scale-95 transition-all"
             :loading="formLoading"
           >
             Sign In
@@ -218,7 +218,7 @@ const handleRegister = async () => {
           <UButton
             type="submit"
             color="primary"
-            class="w-full py-3.5 mt-4 rounded-2xl flex items-center justify-center font-bold shadow-xl shadow-primary-500/25 cursor-pointer hover:scale-[1.01] active:scale-95 transition-all"
+            class="w-full py-3.5 mt-4 rounded-2xl flex items-center justify-center font-bold shadow-[var(--shadow-diffuse-accent)] cursor-pointer hover:scale-[1.01] active:scale-95 transition-all"
             :loading="formLoading"
           >
             Create Account
@@ -240,7 +240,7 @@ const handleRegister = async () => {
           alt="Anime Wallpaper Background"
           class="absolute inset-0 w-full h-full object-cover opacity-50 z-0 scale-105"
         />
-        <div class="absolute inset-0 bg-gradient-to-t from-[#090B10] via-[#090B10]/50 to-transparent z-10" />
+        <div class="absolute inset-0 bg-gradient-to-t from-[var(--ui-overlay)] via-[var(--ui-overlay)]/50 to-transparent z-10" />
         <div class="relative z-20 max-w-md">
           <div class="flex items-center gap-3 mb-4">
             <div class="w-2 h-6 bg-gradient-to-b from-primary-400 to-primary-600 rounded-full " />

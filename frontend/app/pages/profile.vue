@@ -55,13 +55,13 @@ const formatDate = (dateStr?: string) => {
 
     <div v-if="auth.user.value" class="flex flex-col md:flex-row gap-8 items-start">
       <!-- Left Card (Identity & Stats) -->
-      <div class="w-full md:w-80 glass-surface-elevated border border-[var(--glass-border)] rounded-3xl p-6 flex flex-col items-center text-center shadow-xl">
+      <div class="w-full md:w-80 glass-surface-elevated border border-[var(--glass-border)] rounded-3xl p-6 flex flex-col items-center text-center shadow-[var(--shadow-diffuse-lg)]">
         <div class="relative mb-4">
           <UAvatar
             :src="auth.user.value.avatar_url || 'https://i.pravatar.cc/150'"
             alt="User avatar"
             size="2xl"
-            class="ring-4 ring-primary-400/30 rounded-2xl shadow-xl"
+            class="ring-4 ring-primary-400/30 rounded-2xl shadow-[var(--shadow-diffuse-lg)]"
           />
           <div class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-green-500 ring-2 ring-[var(--ui-bg)]" title="Online" />
         </div>
@@ -106,7 +106,7 @@ const formatDate = (dateStr?: string) => {
       </div>
 
       <!-- Right Card (Account Details) -->
-      <div class="flex-1 w-full glass-surface border border-[var(--glass-border)] rounded-3xl p-6 md:p-8 shadow-xl">
+      <div class="flex-1 w-full glass-surface border border-[var(--glass-border)] rounded-3xl p-6 md:p-8 shadow-[var(--shadow-diffuse-lg)]">
         <div class="flex flex-col gap-6">
           <div>
             <h3 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight mb-1 border-b border-[var(--glass-border-subtle)] pb-3">Account Details</h3>

@@ -195,7 +195,7 @@ const subtitleText = computed(() => {
         v-if="loading"
         class="absolute inset-0 flex items-center justify-center bg-[var(--ui-overlay)]/20 backdrop-blur-xs z-10 text-[var(--ui-text-toned)] transition-all duration-200 rounded-3xl"
       >
-        <div class="flex items-center gap-3 glass-surface-elevated border border-[var(--glass-border)] px-5 py-3 rounded-2xl shadow-xl">
+        <div class="flex items-center gap-3 glass-surface-elevated border border-[var(--glass-border)] px-5 py-3 rounded-2xl shadow-[var(--shadow-diffuse-lg)]">
           <UIcon name="i-solar-spinner-linear" class="w-5 h-5 animate-spin text-primary-400" />
           <span class="text-xs font-bold text-[var(--ui-text-highlighted)] font-mono">Fetching catalog...</span>
         </div>

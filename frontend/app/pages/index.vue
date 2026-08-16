@@ -35,6 +35,13 @@ const genres = computed(() => {
     .filter(g => g.count > 1000)
     .slice(0, 10)
 })
+
+const whyItems = [
+  { icon: 'i-solar-star-bold', title: 'Cinematic Over Metadata', desc: 'Instead of overwhelming tables, we prioritize high-resolution backdrops, clean trailer playback, and fluid artwork transitions.' },
+  { icon: 'i-solar-bolt-bold', title: 'Zero Page Jumps', desc: 'Search queries and genre filters update smoothly in-place with instant client transitions.' },
+  { icon: 'i-solar-shield-bold', title: 'One-Click Tracking', desc: 'Bookmark and unbookmark directly from any card or hero banner without tedious multi-field form dialogs.' },
+  { icon: 'i-solar-widget-6-bold', title: 'Clean & Ad-Free', desc: 'No intrusive third-party popups, tracking ads, or spam. Just clean, open-source performance.' },
+]
 </script>
 
 <template>
@@ -83,15 +90,15 @@ const genres = computed(() => {
       <section class="max-w-7xl mx-auto px-6 w-full min-h-[80dvh] md:min-h-[85dvh] flex items-center pt-8 md:pt-16 pb-12">
         <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 w-full items-center">
           <!-- Copy & CTAs -->
-          <div class="lg:col-span-6 flex flex-col gap-6 md:gap-8 justify-center text-left">
+          <div class="lg:col-span-5 flex flex-col gap-6 md:gap-8 justify-center text-left">
             <div class="inline-flex items-center gap-2 glass-pill px-3 py-1 rounded-full w-fit">
               <span class="w-2 h-2 rounded-full bg-primary-400 animate-pulse" />
               <span class="text-xs font-bold text-primary-400 tracking-wider uppercase font-mono">v4.0 Glass Edition</span>
             </div>
 
-            <h1 class="text-4xl md:text-6xl font-bold tracking-tight text-[var(--ui-text-highlighted)] leading-[1.1]">
+            <h1 class="text-4xl md:text-5xl font-semibold tracking-tight text-[var(--ui-text-highlighted)] leading-[1.08]">
               Anime Tracking,<br>
-              <span class="bg-gradient-to-r from-primary-400 via-indigo-400 to-cyan-400 bg-clip-text text-transparent drop-shadow-sm">
+              <span class="font-bold text-primary-600">
                 Cinematic & Fast.
               </span>
             </h1>
@@ -105,7 +112,7 @@ const genres = computed(() => {
                 size="lg"
                 color="primary"
                 icon="i-solar-rocket-bold"
-                class="rounded-2xl font-bold shadow-xl shadow-primary-500/25 px-8 py-3.5 text-center justify-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+                class="rounded-2xl font-bold shadow-[var(--shadow-diffuse-accent)] px-8 py-3.5 text-center justify-center cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
               />
               <UButton
                 to="/browse"
@@ -120,7 +127,7 @@ const genres = computed(() => {
           </div>
 
           <!-- Hero Image with Glass Refraction Glow -->
-          <div class="lg:col-span-6 relative w-full flex items-center justify-center">
+          <div class="lg:col-span-7 relative w-full flex items-center justify-center lg:mt-12">
             <div class="absolute inset-0 bg-primary-500/20 rounded-[40px] blur-3xl -z-10" />
             <div class="w-full relative rounded-3xl overflow-hidden glass-surface border border-[var(--glass-border)]  transform transition-all duration-700 hover:scale-[1.01] group">
               <NuxtImg
@@ -134,7 +141,7 @@ const genres = computed(() => {
                   <UIcon name="i-solar-play-circle-bold" class="w-4 h-4 text-primary-400" />
                   Instant Trailer Previews
                 </span>
-                <span class="text-[var(--ui-text-toned)] text-[10px]">Zero Latency</span>
+                <span class="text-[var(--ui-text-on-image-muted)] text-[10px]">Zero Latency</span>
               </div>
             </div>
           </div>
@@ -167,7 +174,7 @@ const genres = computed(() => {
           <!-- Bento Grid with Frosted Glass Panels -->
           <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
             <!-- Feature 1: Cinematic UI (col-span-2) -->
-            <div class="md:col-span-2 glass-surface-elevated rounded-3xl p-8 flex flex-col justify-between border border-[var(--glass-border)] shadow-xl hover:border-primary-400/50 hover:shadow-[var(--shadow-diffuse-accent)] transition-all duration-300 relative overflow-hidden group min-h-[340px]">
+            <div class="md:col-span-2 glass-surface-elevated rounded-3xl p-8 flex flex-col justify-between border border-[var(--glass-border)] shadow-[var(--shadow-diffuse-lg)] hover:border-primary-400/50 hover:shadow-[var(--shadow-diffuse-accent)] transition-all duration-300 relative overflow-hidden group min-h-[340px]">
               <div class="absolute -right-10 -bottom-10 w-72 h-44 bg-primary-500/10 rounded-full blur-3xl group-hover:bg-primary-500/20 transition-colors" />
               <div class="flex flex-col gap-3 max-w-md z-10">
                 <div class="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-primary-400 mb-2 shadow-inner">
@@ -188,7 +195,7 @@ const genres = computed(() => {
             </div>
 
             <!-- Feature 2: Personalized Watchlist (col-span-1) -->
-            <div class="glass-surface-elevated rounded-3xl p-8 flex flex-col justify-between border border-[var(--glass-border)] shadow-xl hover:border-primary-400/50 hover:shadow-[var(--shadow-diffuse-accent)] transition-all duration-300 relative overflow-hidden group min-h-[340px]">
+            <div class="glass-surface-elevated rounded-3xl p-8 flex flex-col justify-between border border-[var(--glass-border)] shadow-[var(--shadow-diffuse-lg)] hover:border-primary-400/50 hover:shadow-[var(--shadow-diffuse-accent)] transition-all duration-300 relative overflow-hidden group min-h-[340px]">
               <div class="absolute -left-10 -bottom-10 w-52 h-52 bg-primary-500/10 rounded-full blur-3xl group-hover:bg-primary-500/20 transition-colors" />
               <div class="flex flex-col gap-3 z-10">
                 <div class="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-primary-400 mb-2 shadow-inner">
@@ -212,7 +219,7 @@ const genres = computed(() => {
             </div>
 
             <!-- Feature 3: Instant Discovery (col-span-3) -->
-            <div class="md:col-span-3 glass-surface-elevated rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 border border-[var(--glass-border)] shadow-xl hover:border-primary-400/50 hover:shadow-[var(--shadow-diffuse-accent)] transition-all duration-300 relative overflow-hidden group">
+            <div class="md:col-span-3 glass-surface-elevated rounded-3xl p-8 flex flex-col md:flex-row items-center justify-between gap-8 border border-[var(--glass-border)] shadow-[var(--shadow-diffuse-lg)] hover:border-primary-400/50 hover:shadow-[var(--shadow-diffuse-accent)] transition-all duration-300 relative overflow-hidden group">
               <div class="flex flex-col gap-3 max-w-lg z-10">
                 <div class="w-10 h-10 rounded-2xl glass-pill flex items-center justify-center text-primary-400 mb-2 shadow-inner">
                   <UIcon name="i-solar-magnifer-linear" class="w-5 h-5" />
@@ -251,38 +258,21 @@ const genres = computed(() => {
             </p>
           </div>
 
-          <!-- Comparison Cards Layout -->
-          <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-6">
-            <div class="flex flex-col gap-3 p-6 glass-surface border border-[var(--glass-border)] rounded-3xl hover:border-primary-400/40 hover:shadow-lg transition-all">
-              <div class="text-primary-400"><UIcon name="i-solar-star-bold" class="w-6 h-6" /></div>
-              <h4 class="text-sm md:text-base font-bold text-[var(--ui-text-highlighted)]">Cinematic Over Metadata</h4>
-              <p class="text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
-                Instead of overwhelming tables, we prioritize high-resolution backdrops, clean trailer playback, and fluid artwork transitions.
-              </p>
-            </div>
-
-            <div class="flex flex-col gap-3 p-6 glass-surface border border-[var(--glass-border)] rounded-3xl hover:border-primary-400/40 hover:shadow-lg transition-all">
-              <div class="text-primary-400"><UIcon name="i-solar-bolt-bold" class="w-6 h-6" /></div>
-              <h4 class="text-sm md:text-base font-bold text-[var(--ui-text-highlighted)]">Zero Page Jumps</h4>
-              <p class="text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
-                Search queries and genre filters update smoothly in-place with instant client transitions.
-              </p>
-            </div>
-
-            <div class="flex flex-col gap-3 p-6 glass-surface border border-[var(--glass-border)] rounded-3xl hover:border-primary-400/40 hover:shadow-lg transition-all">
-              <div class="text-primary-400"><UIcon name="i-solar-shield-bold" class="w-6 h-6" /></div>
-              <h4 class="text-sm md:text-base font-bold text-[var(--ui-text-highlighted)]">One-Click Tracking</h4>
-              <p class="text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
-                Bookmark and unbookmark directly from any card or hero banner without tedious multi-field form dialogs.
-              </p>
-            </div>
-
-            <div class="flex flex-col gap-3 p-6 glass-surface border border-[var(--glass-border)] rounded-3xl hover:border-primary-400/40 hover:shadow-lg transition-all">
-              <div class="text-primary-400"><UIcon name="i-solar-widget-6-bold" class="w-6 h-6" /></div>
-              <h4 class="text-sm md:text-base font-bold text-[var(--ui-text-highlighted)]">Clean & Ad-Free</h4>
-              <p class="text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal">
-                No intrusive third-party popups, tracking ads, or spam. Just clean, open-source performance.
-              </p>
+          <!-- Comparison Rows — divided lines, no card boxes -->
+          <div class="lg:col-span-7 divide-y divide-[var(--ui-border-muted)] border-y border-[var(--ui-border-muted)]">
+            <div
+              v-for="(item, i) in whyItems"
+              :key="item.title"
+              class="group flex items-start gap-5 py-7 px-1 hover:translate-x-1 transition-transform duration-300"
+            >
+              <div class="w-11 h-11 flex-shrink-0 rounded-2xl glass-pill flex items-center justify-center text-primary-500">
+                <UIcon :name="item.icon" class="w-5 h-5" />
+              </div>
+              <div class="flex-1 min-w-0">
+                <h4 class="text-sm md:text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight">{{ item.title }}</h4>
+                <p class="text-xs text-[var(--ui-text-toned)] leading-relaxed font-normal mt-1">{{ item.desc }}</p>
+              </div>
+              <span class="hidden sm:block text-[11px] font-mono text-[var(--ui-text-toned)]/70 pt-1">{{ `0${i + 1}` }}</span>
             </div>
           </div>
         </div>
@@ -291,7 +281,7 @@ const genres = computed(() => {
       <!-- FAQ Section (Glass Accordion) -->
       <section id="faq" class="py-20 border-t border-[var(--glass-border-subtle)] relative">
         <div class="max-w-4xl mx-auto px-6 w-full flex flex-col gap-10">
-          <div class="text-center max-w-2xl mx-auto">
+          <div class="max-w-2xl">
             <h2 class="text-3xl font-bold tracking-tight text-[var(--ui-text-highlighted)] sm:text-4xl">
               Frequently Asked Questions
             </h2>
@@ -363,7 +353,7 @@ const genres = computed(() => {
               label="Join KoKo"
               size="lg"
               color="primary"
-              class="rounded-2xl font-bold shadow-xl shadow-primary-500/25 px-8 py-3.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+              class="rounded-2xl font-bold shadow-[var(--shadow-diffuse-accent)] px-8 py-3.5 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
             />
             <UButton
               to="/browse"

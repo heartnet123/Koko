@@ -57,7 +57,7 @@ const handleRemove = async (animeId: number) => {
         color="primary"
         size="lg"
         icon="i-solar-compass-linear"
-        class="rounded-2xl font-bold shadow-xl shadow-primary-500/25 px-8 py-3 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+        class="rounded-2xl font-bold shadow-[var(--shadow-diffuse-accent)] px-8 py-3 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
       />
     </div>
 
@@ -80,7 +80,7 @@ const handleRemove = async (animeId: number) => {
             placeholder
           />
           <div class="absolute inset-0 bg-[var(--ui-overlay)]/50 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300">
-            <div class="w-10 h-10 rounded-full glass-chip flex items-center justify-center text-white shadow-xl">
+            <div class="w-10 h-10 rounded-full glass-chip flex items-center justify-center text-white shadow-[var(--shadow-diffuse-lg)]">
               <UIcon name="i-solar-play-bold" class="w-5 h-5 text-primary-400 ml-0.5" />
             </div>
           </div>

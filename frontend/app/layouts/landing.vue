@@ -69,7 +69,7 @@ const menuItems = [
               label="Go to Dashboard"
               color="primary"
               icon="i-solar-arrow-right-linear"
-              class="rounded-full font-bold shadow-lg shadow-primary-500/20 px-6 cursor-pointer"
+              class="rounded-full font-bold shadow-[var(--shadow-diffuse-accent)] px-6 cursor-pointer"
             />
             <div v-else class="flex items-center gap-3">
               <UButton
@@ -83,7 +83,7 @@ const menuItems = [
                 to="/login"
                 label="Get Started"
                 color="primary"
-                class="rounded-full font-bold shadow-lg shadow-primary-500/20 px-6 cursor-pointer"
+                class="rounded-full font-bold shadow-[var(--shadow-diffuse-accent)] px-6 cursor-pointer"
               />
             </div>
           </ClientOnly>
@@ -130,7 +130,7 @@ const menuItems = [
                 label="Go to Dashboard"
                 color="primary"
                 block
-                class="rounded-full font-bold shadow-lg shadow-primary-500/20 py-3 text-center justify-center cursor-pointer"
+                class="rounded-full font-bold shadow-[var(--shadow-diffuse-accent)] py-3 text-center justify-center cursor-pointer"
                 @click="isMobileMenuOpen = false"
               />
               <div v-else class="flex flex-col gap-2">
@@ -148,7 +148,7 @@ const menuItems = [
                   label="Get Started"
                   color="primary"
                   block
-                  class="rounded-full font-bold shadow-lg shadow-primary-500/20 py-3 text-center justify-center cursor-pointer"
+                  class="rounded-full font-bold shadow-[var(--shadow-diffuse-accent)] py-3 text-center justify-center cursor-pointer"
                   @click="isMobileMenuOpen = false"
                 />
               </div>

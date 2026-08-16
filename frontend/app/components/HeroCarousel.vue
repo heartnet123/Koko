@@ -77,8 +77,8 @@ onUnmounted(() => {
           </div>
 
           <!-- Glass Dark Gradients -->
-          <div class="absolute inset-0 bg-gradient-to-t from-[#090B10]/95 via-[#090B10]/50 to-transparent" />
-          <div class="absolute inset-0 bg-gradient-to-r from-[#090B10]/80 via-transparent to-transparent hidden md:block" />
+          <div class="absolute inset-0 bg-gradient-to-t from-[var(--ui-overlay)]/95 via-[var(--ui-overlay)]/50 to-transparent" />
+          <div class="absolute inset-0 bg-gradient-to-r from-[var(--ui-overlay)]/80 via-transparent to-transparent hidden md:block" />
 
           <!-- Content overlay -->
           <div class="absolute bottom-8 md:bottom-12 left-6 md:left-12 right-6 max-w-2xl flex flex-col gap-4 z-10 text-white">
@@ -100,7 +100,7 @@ onUnmounted(() => {
             </div>
 
             <!-- Title -->
-            <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight drop-shadow-lg">
+            <h2 class="text-2xl md:text-4xl lg:text-5xl font-bold tracking-tight text-white leading-tight drop-shadow-[var(--shadow-diffuse)]">
               {{ activeSlide.title_english || activeSlide.title }}
             </h2>
             
@@ -117,7 +117,7 @@ onUnmounted(() => {
                 size="lg"
                 icon="i-solar-play-bold"
                 label="View Details"
-                class="font-bold px-6 py-3 rounded-2xl shadow-xl shadow-primary-500/25 hover:shadow-primary-500/40 hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
+                class="font-bold px-6 py-3 rounded-2xl shadow-[var(--shadow-diffuse-accent)]  hover:scale-[1.02] active:scale-95 transition-all cursor-pointer"
               />
               <UButton
                 v-if="!isInWatchlist"

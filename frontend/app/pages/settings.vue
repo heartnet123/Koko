@@ -91,14 +91,14 @@ const handleSave = async () => {
       />
     </div>
 
-    <form v-if="auth.user.value" class="glass-surface-elevated border border-[var(--glass-border)] rounded-3xl p-6 md:p-8 shadow-xl flex flex-col gap-6" @submit.prevent="handleSave">
+    <form v-if="auth.user.value" class="glass-surface-elevated border border-[var(--glass-border)] rounded-3xl p-6 md:p-8 shadow-[var(--shadow-diffuse-lg)] flex flex-col gap-6" @submit.prevent="handleSave">
       <div class="flex flex-col md:flex-row gap-8 items-start">
         <div class="flex flex-col items-center gap-3 w-full md:w-48">
           <UAvatar
             :src="avatarUrl || auth.user.value.avatar_url || 'https://i.pravatar.cc/150'"
             alt="User avatar preview"
             size="2xl"
-            class="ring-4 ring-primary-400/30 rounded-2xl shadow-xl"
+            class="ring-4 ring-primary-400/30 rounded-2xl shadow-[var(--shadow-diffuse-lg)]"
           />
           <p class="text-xs text-[var(--ui-text-toned)] text-center font-mono">Avatar Preview</p>
         </div>
@@ -184,7 +184,7 @@ const handleSave = async () => {
           icon="i-solar-diskette-linear"
           color="primary"
           :loading="saveLoading"
-          class="rounded-xl px-6 py-2.5 text-xs font-bold shadow-xl shadow-primary-500/25 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+          class="rounded-xl px-6 py-2.5 text-xs font-bold shadow-[var(--shadow-diffuse-accent)] cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
         />
       </div>
     </form>

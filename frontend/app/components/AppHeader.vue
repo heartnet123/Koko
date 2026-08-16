@@ -185,7 +185,7 @@ defineEmits<{
           color="primary"
           size="sm"
           icon="i-solar-login-linear"
-          class="rounded-xl shadow-lg shadow-primary-500/20 cursor-pointer font-bold px-4"
+          class="rounded-xl shadow-[var(--shadow-diffuse-accent)] cursor-pointer font-bold px-4"
         />
       </ClientOnly>
     </div>

@@ -109,7 +109,7 @@ const toggleWatchlist = async () => {
         label="Try Again"
         icon="i-solar-refresh-linear"
         color="primary"
-        class="rounded-xl px-6 py-2.5 font-bold shadow-lg shadow-primary-500/20 cursor-pointer"
+        class="rounded-xl px-6 py-2.5 font-bold shadow-[var(--shadow-diffuse-accent)] cursor-pointer"
         @click="refreshNuxtData(`anime-${animeId}`)"
       />
     </div>
@@ -133,8 +133,8 @@ const toggleWatchlist = async () => {
         class="absolute inset-0 w-full h-full object-cover object-top scale-110 blur-md opacity-35"
       />
       <!-- Glass Gradients -->
-      <div class="absolute inset-0 bg-gradient-to-t from-[#090B10]/95 via-[#090B10]/70 to-transparent" />
-      <div class="absolute inset-0 bg-gradient-to-r from-[#090B10]/90 via-[#090B10]/40 to-transparent hidden md:block" />
+      <div class="absolute inset-0 bg-gradient-to-t from-[var(--ui-overlay)]/95 via-[var(--ui-overlay)]/70 to-transparent" />
+      <div class="absolute inset-0 bg-gradient-to-r from-[var(--ui-overlay)]/90 via-[var(--ui-overlay)]/40 to-transparent hidden md:block" />
 
       <!-- Hero content -->
       <div class="relative flex flex-col md:flex-row items-start md:items-center gap-6 md:gap-8 z-10">
@@ -202,7 +202,7 @@ const toggleWatchlist = async () => {
               label="Watch Trailer"
               color="primary"
               size="lg"
-              class="rounded-2xl font-bold shadow-xl shadow-primary-500/25 px-6 py-3 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
+              class="rounded-2xl font-bold shadow-[var(--shadow-diffuse-accent)] px-6 py-3 cursor-pointer hover:scale-[1.02] active:scale-95 transition-all"
               @click="() => {
                 const el = document.getElementById('trailer-section')
                 if (el) el.scrollIntoView({ behavior: 'smooth' })
@@ -228,7 +228,7 @@ const toggleWatchlist = async () => {
       <!-- Left column (wider) -->
       <div class="lg:col-span-2 space-y-6">
         <!-- Trailer Section -->
-        <section v-if="youtubeEmbedUrl" id="trailer-section" class="glass-surface-elevated rounded-3xl border border-[var(--glass-border)] overflow-hidden shadow-lg">
+        <section v-if="youtubeEmbedUrl" id="trailer-section" class="glass-surface-elevated rounded-3xl border border-[var(--glass-border)] overflow-hidden shadow-[var(--shadow-diffuse)]">
           <div class="px-6 pt-5 pb-4 flex items-center gap-2 border-b border-[var(--glass-border-subtle)]">
             <UIcon name="i-solar-play-circle-linear" class="w-5 h-5 text-primary-400" />
             <h2 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight">Official Trailer</h2>
@@ -335,8 +335,8 @@ const toggleWatchlist = async () => {
       <!-- Right column (Sidebar) -->
       <div class="space-y-6">
         <!-- Score Card -->
-        <div class="glass-surface-elevated rounded-3xl border border-[var(--glass-border)] p-6 text-center shadow-lg">
-          <div class="w-20 h-20 mx-auto rounded-2xl glass-surface flex items-center justify-center mb-3 shadow-xl ring-2 ring-primary-400/30">
+        <div class="glass-surface-elevated rounded-3xl border border-[var(--glass-border)] p-6 text-center shadow-[var(--shadow-diffuse)]">
+          <div class="w-20 h-20 mx-auto rounded-2xl glass-surface flex items-center justify-center mb-3 shadow-[var(--shadow-diffuse-lg)] ring-2 ring-primary-400/30">
             <span class="text-3xl font-bold text-primary-400 font-mono">{{ formattedScore }}</span>
           </div>
           <p class="text-xs text-[var(--ui-text-toned)] mb-5 font-mono">
