@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
 import { useAuth } from '~/composables/useAuth'
+import { useJikan } from '~/composables/useJikan'
 import type { JikanEpisodesResponse, JikanEpisode } from '~/types/anime'
 
 const route = useRoute()
@@ -14,12 +15,8 @@ const { data: response, status, error } = await useFetch<{ data: any }>(
 const anime = computed(() => response.value?.data)
 
 const episodePage = ref(1)
-const { data: episodesResponse, status: episodesStatus } = await useFetch<JikanEpisodesResponse>(
-  () => `http://localhost:8080/api/anime/${animeId.value}/episodes?page=${episodePage.value}`,
-  {
-    key: `anime-episodes-${animeId.value}-${episodePage.value}`,
-    watch: [episodePage, animeId],
-  }
+const { data: episodesResponse, pending: episodesPending } = useJikan<JikanEpisodesResponse>(
+  () => `/anime/${animeId.value}/episodes?page=${episodePage.value}`
 )
 const episodes = computed<JikanEpisode[]>(() => episodesResponse.value?.data || [])
 const episodesPagination = computed(() => episodesResponse.value?.pagination)
@@ -288,7 +285,7 @@ const toggleWatchlist = async () => {
           </div>
 
           <!-- Loading State -->
-          <div v-if="episodesStatus === 'pending'" class="space-y-2.5">
+          <div v-if="episodesPending" class="space-y-2.5">
             <div v-for="i in 5" :key="i" class="h-12 glass-pill animate-glass-shimmer rounded-2xl" />
           </div>
 
@@ -308,7 +305,7 @@ const toggleWatchlist = async () => {
                   <p class="text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] group-hover:text-primary-400 transition-colors truncate">
                     {{ ep.title }}
                   </p>
-                  <p v-if="ep.title_japanese" class="text-[10px] text-[var(--ui-text-toned)] truncate font-mono">
+                  <p v-if="ep.title_japanese" class="text-[10px] text-[var(--ui-text-toned)] truncate">
                     {{ ep.title_japanese }}
                   </p>
                 </div>

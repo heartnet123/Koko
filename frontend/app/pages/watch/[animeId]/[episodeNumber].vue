@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed } from 'vue'
+import { useJikan } from '~/composables/useJikan'
 import type { JikanEpisodesResponse, JikanEpisode } from '~/types/anime'
 
 const route = useRoute()
@@ -8,17 +9,15 @@ const animeId = computed(() => route.params.animeId as string)
 const episodeNumber = computed(() => Number(route.params.episodeNumber))
 
 // Anime details
-const { data: animeResponse, status: animeStatus } = await useFetch<{ data: any }>(
-  () => `http://localhost:8080/api/anime/${animeId.value}`,
-  { key: `anime-${animeId.value}` }
+const { data: animeResponse } = useJikan<{ data: any }>(
+  () => `/anime/${animeId.value}`
 )
 const anime = computed(() => animeResponse.value?.data)
 
 // Episodes to lookup title/metadata
 const pageForEpisode = computed(() => Math.max(1, Math.ceil(episodeNumber.value / 100)))
-const { data: episodesResponse } = await useFetch<JikanEpisodesResponse>(
-  () => `http://localhost:8080/api/anime/${animeId.value}/episodes?page=${pageForEpisode.value}`,
-  { key: `anime-episodes-${animeId.value}-${pageForEpisode.value}` }
+const { data: episodesResponse } = useJikan<JikanEpisodesResponse>(
+  () => `/anime/${animeId.value}/episodes?page=${pageForEpisode.value}`
 )
 const currentEpisode = computed<JikanEpisode | undefined>(() => {
   return episodesResponse.value?.data?.find(ep => ep.mal_id === episodeNumber.value)
