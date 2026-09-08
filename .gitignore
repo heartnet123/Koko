@@ -19,6 +19,27 @@ backend/server.exe
 .fleet/
 .idea/
 .vscode/
+# Dependency directories
+node_modules/
+**/node_modules/
+
+# Build outputs
+.output/
+.data/
+.nuxt/
+.nitro/
+.cache/
+dist/
+
+# Compiled binaries
+backend/server.exe
+*.exe
+
+# IDEs and local configurations
+.DS_Store
+.fleet/
+.idea/
+.vscode/
 
 # Local env files
 .env
@@ -30,6 +51,16 @@ backend/server.exe
 .workflow/
 .codegraph/
 .superpowers/
+.clinerules/
+.cursor/
+.opencode/
+.windsurf/
+.ignore
 docs/
 graphify-out/
+graft/
 
+# Scratch & dumps
+*.b64
+cl*.txt
+proc.txt

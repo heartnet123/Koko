@@ -4,30 +4,44 @@
 
 | Token | Value | Usage |
 |---|---|---|
-| Primary | `#635BFF` | CTAs, active states, progress |
-| Background | `#FCFCFD` | App shell, sidebar |
-| Text | `#1A1A2E` | Headings |
+| Primary | `#16B681` | CTAs, active states, progress (desaturated emerald, ~76% sat) |
+| Background | `#F4F6FB` light / `#090B10` dark | App shell, sidebar |
+| Text | `#0F172A` light / `#F8FAFC` dark | Headings |
 
 Mapped to Nuxt UI `primary` color via `@theme` in `main.css`.
 
----
+**Palette rules (design-taste-frontend-v1):**
+- One accent only. No purple/indigo/cyan mixes, no gradient text on headlines.
+- No neon/outer glow shadows (`0_0_*`). Elevation = `--shadow-diffuse*` (wide, faint, tinted).
+- No pure `#000`. Overlays use off-black `--ui-overlay: #090B10`.
+- No raw Tailwind palette classes (`text-gray-*`, `text-neutral-*`, `bg-red-500/…`). Semantic tokens only.
+
+## Typography
+
+| Font | Usage |
+|---|---|
+| Geist (via `@nuxt/fonts`) | All UI text — `--font-sans` |
+| Geist Mono | DATA ONLY: scores, counts, indices, meta eyebrows |
+
+- Base weight 400; hierarchy via weight + color, not scale (no oversized H1s).
+- Headlines: `tracking-tight`, `text-4xl md:text-5xl` max on landing.
 
 ## Layout
 
 ```
 ┌─────────────────────────────────────────────────┐
-│  AppSidebar (w-64, sticky)  │  main             │
-│                              │  AppHeader (h-20) │
-│  Brand logo                  │  ───────────────  │
-│  Nav items                   │  <slot />         │
-│  User items                  │  (scrollable)     │
+│  AppSidebar (w-64, sticky, min-h-[100dvh])      │
+│   │  main                                       │
+│   │  AppHeader (h-20)                           │
+│   │  ─────────────                              │
+│   │  <slot /> (scrollable)                      │
 └─────────────────────────────────────────────────┘
+Mobile: floating glass bottom nav + slideover drawer.
 ```
 
 - `layouts/default.vue` — shell with sidebar + header
-- `app.vue` — `UApp > NuxtLayout > NuxtPage`
-
----
+- `layouts/landing.vue` — guest marketing layout
+- `app.vue` — `UApp > NuxtLayout > NuxtPage transition="page"`
 
 ## Color semantics (Nuxt UI)
 
@@ -39,130 +53,117 @@ Mapped to Nuxt UI `primary` color via `@theme` in `main.css`.
 | `bg-elevated` | Card surfaces (replaces `bg-gray-50`) |
 | `bg-default` | White-ish surfaces |
 | `border-muted` | Subtle borders (replaces `border-gray-100`) |
+| `--ui-text-on-image(-muted)` | Text over hero artwork scrims |
+| `--ui-error` / `--ui-success` / `--ui-warn` | Semantic status |
+| `--rank-gold/silver/bronze` | Trending podium + score stars |
 
 Never use raw Tailwind palette colors (`text-gray-*`, `bg-gray-*`).
 
----
+## Shadows
 
-## Components
+| Token | Use |
+|---|---|
+| `--shadow-diffuse` | Resting elevation (wide, faint, tinted to surface hue) |
+| `--shadow-diffuse-lg` | Large panels, heroes |
+| `--shadow-diffuse-accent` | Hover elevation on interactive cards/CTAs |
 
-### AppSidebar
-- Fixed 64px wide, sticky, `h-screen`
-- Nav links via `NuxtLink` + `active-class` for active state
+Glass surfaces carry an inner highlight (`inset 0 1px 1px` refraction) — never stack `shadow-2xl` on glass.
 
-### AppHeader
-- Sticky, `h-20`, frosted glass (`bg-[#FCFCFD]/80 backdrop-blur-md`)
-- Search input (native `<input>` with UIcon prefix)
-- Bell button + avatar
+## Full-height rule
 
-### HeroSection
-- Full-bleed image with gradient overlay
-- Play + Watchlist `UButton` calls-to-action
-- Slides array — swap `src` to drive featured content
-
-### RecommendedSection
-- Fetches `api.jikan.moe/v4/top/anime`
-- 5-col grid, `aspect-[3/4]` cards with play overlay
-
-### GenreSection
-- Fetches genre list, filters `count > 1000`, top 10
-- Renders `GenreRow` per genre (staggered with index)
-
-### GenreRow
-- Per-genre 5-col grid
-- Rate-limit aware: retries after 2s on HTTP 429
-- Color/icon rotates through 8 preset styles via `index % 8`
-
----
+Never `h-screen`. Always `min-h-[100dvh]` (mobile URL-bar safe).
 
 ## Icons
 
 Collection: `solar` (via `@nuxt/icon` bundled in `@nuxt/ui`).
-Format: `i-solar-{name}`.
+Format: `i-solar-{name}`. Star icons use `text-[var(--rank-gold)]`.
 
----
+## Motion (MOTION_INTENSITY 6)
+
+- CSS-first: Ken Burns hero, shimmer skeletons, `animate-breathe` status dots, staggered rail load-ins, `animate-fade-in-up`.
+- `v-magnetic` directive (`app/directives/magnetic.ts`): CTAs pull toward cursor via rAF + direct DOM — no reactive state, no re-renders.
+- Page transitions: `transition="page"` on `NuxtPage`, 0.3s fade/slide.
+- All motion honors `prefers-reduced-motion` (main.css media query).
+
+## Components
+
+### AppSidebar
+- Fixed 64px wide, sticky, `min-h-[100dvh]`
+- Nav links via `NuxtLink` + `active-class` for active state
+
+### AppHeader
+- Sticky, `h-20`, frosted glass (`bg-[var(--ui-bg)]/80 backdrop-blur-md`)
+- Search input (native `<input>` with UIcon prefix), weight 400
+
+### HeroCarousel
+- Full-bleed image, Ken Burns, 8s autoplay with pause-override, dot indicators
+- Play + Watchlist `UButton` calls-to-action
+
+### AnimeRail
+- Per-genre lazy horizontal scroller (intersection observer, 200px rootMargin)
+- Rate-limit aware: retries after 2s on HTTP 429
+
+### AnimeCard
+- Portrait `aspect-[2/3]` card, hover = accent diffusion shadow + border tint
 
 ## API
 
 All data from [Jikan v4](https://api.jikan.moe/v4) (unofficial MyAnimeList REST).
 No auth required. Rate limit: ~3 req/s.
 
----
-
 ## File tree
 
 ```
 app/
-├── app.vue                          # UApp shell
-├── assets/css/main.css              # Tailwind + Nuxt UI + @theme brand + custom animations
+├── app.vue                          # UApp shell + page transitions
+├── assets/css/main.css              # Tailwind + Nuxt UI + @theme brand + tokens
+├── directives/magnetic.ts           # v-magnetic CTA micro-physics
 ├── layouts/
-│   └── default.vue                  # AppSidebar + AppHeader shell
+│   ├── default.vue                  # Sidebar + header shell (+ mobile bottom nav)
+│   └── landing.vue                  # Guest marketing shell
 ├── pages/
-│   └── index.vue                    # Composes HeroCarousel + AnimeRail list
+│   ├── index.vue                    # Landing (guest) + dashboard (authed)
+│   ├── browse.vue / trending.vue / watchlist.vue
+│   ├── login.vue / profile.vue / settings.vue
+│   └── movie/[id].vue               # Detail page
 ├── composables/
 │   ├── useAuth.ts                   # Auth + watchlist management
 │   ├── useJikan.ts                  # Fetch wrapper for Jikan proxy with retry logic
 │   └── useGenreQuery.ts             # Genre routing query parser
 └── components/
-    ├── AppSidebar.vue
-    ├── AppHeader.vue
-    ├── AnimeCard.vue                # Portrait aspect-[2/3] card
-    ├── AnimeRail.vue                # Lazy horizontal anime scroller
-    ├── HeroCarousel.vue             # Autoplay Ken Burns carousel
-    └── skeletons/
-        ├── HeroSkeleton.vue         # Shimmer skeleton for Hero
-        └── RailSkeleton.vue         # Shimmer skeleton for AnimeRail
+    ├── AppSidebar.vue / AppHeader.vue / AnimeCard.vue / AnimeRail.vue
+    ├── HeroCarousel.vue / GenreFilterDropdown.vue
+    └── skeletons/ (HeroSkeleton, RailSkeleton)
 ```
 
 ---
 
-## Minimal Redesign
+## Redesign Log (design-taste-frontend-v1 pass)
 
 ### Decision Log
-1. **Skeletons Isolation**: Skeletons are modularized inside `skeletons/` to avoid component clutter.
-2. **Hero Datasource**: `/seasons/now` endpoint is mapped in backend to load current airing titles for the hero carousel.
-3. **useJikan Composable**: Crafted a clean utility using native Vue refs and `$fetch` supporting automatic retry logic.
-4. **Ken Burns Motion**: Defined pure CSS scale/translate keyframes for smooth hardware-accelerated movements.
-5. **Shimmer Gradients**: Created a linear-gradient keyframe animation on background positioning for skeletons.
-6. **Horizontal Scrolling**: Implemented touch-smooth horizontal scroll container utilizing Tailwind's `snap-x` and browser scrollbar hiding.
-7. **Lazy Fetching via intersection**: Utilized VueUse's `useIntersectionObserver` to trigger network request only when scroller enters viewport (rootMargin: '200px').
-8. **Item De-duplication**: Embedded set-based filtering on `mal_id`s within rails to clean up API results.
-9. **Retry Mechanisms**: Provided direct click callbacks on error states to let users reload individual failed categories.
-10. **Autoplay Timing**: Programmed 8-second rotation cycles for Hero slide intervals.
-11. **Autoplay Pause Override**: Implemented timeout overrides that pause auto-rotation for 10 seconds on dot interactions.
-12. **Hero Transitions**: Wrapped slides in Vue `<Transition name="hero-fade">` to smoothly blend layouts.
-13. **Watchlist State Matching**: Wired bookmarks directly to the `inWatchlist(id)` getter inside `useAuth()`.
-14. **Watchlist Flow Protection**: Programmed automatic redirection to `/login` inside card bookmarks when unauthenticated.
-15. **Staggered Page Load**: Applied stagger delays to the categories list to introduce rails with visual flow.
-16. **Prefers Reduced Motion Support**: Applied a CSS media query that overrides both `@keyframes` animations when OS preference is active.
+1-16: prior entries — see git history (`DESIGN.md` pre-2026 entries).
+17. **Fonts**: Cascadia Mono (everywhere) → Geist + Geist Mono. Mono reserved for data/labels; UI sans. Dropped CDN `<link>`, served via `@nuxt/fonts`.
+18. **Accent desaturation**: `#00DC82` (100% sat) → `#16B681` (~76%). Full ramp in `@theme`.
+19. **No-neon policy**: all `shadow-[0_0_*rgba(0,220,130,…)]` outer glows removed; replaced with `--shadow-diffuse*` + inner glass highlight.
+20. **Off-black overlays**: `bg-black/*` → `bg-[var(--ui-overlay)]/*` (`#090B10`); no pure black anywhere.
+21. **Gradient headline** (indigo/cyan mix) → single-hue accent span with weight contrast; H1 scale capped at `md:text-5xl`.
+22. **Card-wall removal**: "Why KoKo" 2×2 equal cards → `divide-y` border rows with mono indices (no boxes).
+23. **Hero asymmetry**: landing hero 6/6 → 5/7 split with vertically offset visual (`lg:mt-12`).
+24. **dvh hardening**: `h-screen` / `min-h-screen` / `calc(100vh-*)` → `100dvh` variants.
+25. **Magnetic CTAs**: `v-magnetic` directive (rAF, direct DOM, no reactive state) on hero / Get Started / Join KoKo.
+26. **Page transitions**: `NuxtPage transition="page"` (0.3s fade/slide) with reduced-motion override.
+27. **Breathing status dot**: `animate-pulse` → `animate-breathe` (spring-like scale/opacity loop).
+28. **Form fields**: `font-mono` stripped from inputs/labels; weight 400; mono kept only for data.
+29. **Semantic tokens**: `--ui-error/-success/-warn`, `--rank-{gold,silver,bronze}` replace raw `red-/amber-/yellow-*` classes.
 
-### Architecture
-
-```mermaid
-graph TD
-  Index[index.vue Orchestrator] -->|Loads immediate| HeroSkel[HeroSkeleton]
-  Index -->|Loads immediate| Hero[HeroCarousel]
-  Index -->|Loads staggered| Rails[AnimeRails]
-  
-  Hero -->|Watchlist state| Auth[useAuth Composable]
-  Hero -->|Renders slides| Card[AnimeCard]
-  Rails -->|Viewport Intersect| useJikan[useJikan Fetcher]
-  Rails -->|Renders items| Card
-  Card -->|Route Link| Details[/movie/:id Details Page]
-```
-
-### Component Responsibilities
-- `HeroCarousel.vue`: Handles image scale animation, automatic 8s interval timer, dot buttons, and watchlist sync.
-- `AnimeRail.vue`: Orchestrates intersection observer, lazy loads details, displays slider chevrons, and lists card nodes.
-- `AnimeCard.vue`: Renders score chip, title info, type/year metadata, and provides the redirect route.
-
-### Manual Smoke Test Steps
-1. Load home page: Verify shimmer skeleton placeholder is displayed.
-2. Hero slide loading: Ensure the first slide loads and begins Ken Burns panning.
-3. Rotation verification: Confirm the carousel rotates to slide 2 after 8s.
-4. Pause check: Click slide indicator 4, confirm transition, and ensure the rotation halts for 10s.
-5. Lazy intersection test: Scroll down. Confirm in network logs that rails query endpoints only when visible.
-6. Watchlist redirect check: Log out. Click "Watchlist" on Hero. Confirm it redirects to `/login`.
-7. Card click verification: Click any anime poster to ensure redirection to `/movie/[id]`.
-8. Reduced motion: Enable reduced-motion in system settings. Confirm Ken Burns and skeleton shimmer animations freeze.
-9. Error retry test: Trigger a mock 429 rate limit. Verify "Retry" button renders and recovers successfully on click.
+### Manual Smoke Test Steps (post-redesign)
+1. Load home page: shimmer skeleton, then hero first slide starts Ken Burns.
+2. Hero rotation: slide 2 after 8s; clicking indicator pauses rotation 10s.
+3. Lazy rails: network log shows per-genre queries only when scroller enters viewport.
+4. Magnetic CTAs: move cursor over "Get Started Free" — button translates toward cursor, springs back on leave.
+5. Page transitions: navigate Home ↔ Browse — fade/slide, no flash.
+6. Watchlist redirect: logged out, click bookmark → `/login`.
+7. Card click: poster → `/movie/[id]`; detail hero renders with off-black scrims.
+8. Fonts: inspect computed font-family — Geist loaded locally (no CDN request).
+9. Shadows: hover cards — diffusion tint, no green glow.
+10. Reduced motion: enable OS reduce — Ken Burns, shimmer, breathe, page transitions freeze.
