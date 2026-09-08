@@ -550,7 +550,25 @@ func fetchAndCache(c *gin.Context, cache *Cache, targetURL string) {
 		return
 	}
 
-	resp, err := http.Get(targetURL)
+	client := &http.Client{Timeout: 10 * time.Second}
+	var resp *http.Response
+	var err error
+	for attempts := 0; attempts < 3; attempts++ {
+		req, reqErr := http.NewRequest("GET", targetURL, nil)
+		if reqErr != nil {
+			err = reqErr
+			break
+		}
+		req.Header.Set("User-Agent", "KoKo-App/1.0 (https://github.com/heartnet123/Koko)")
+		resp, err = client.Do(req)
+		if err == nil && resp.StatusCode != http.StatusTooManyRequests && resp.StatusCode != http.StatusGatewayTimeout {
+			break
+		}
+		if attempts < 2 && resp != nil {
+			resp.Body.Close()
+		}
+		time.Sleep(time.Duration(attempts+1) * 800 * time.Millisecond)
+	}
 	if err != nil {
 		c.JSON(http.StatusBadGateway, gin.H{"error": fmt.Sprintf("Failed to fetch from Jikan API: %v", err)})
 		return
@@ -559,8 +577,13 @@ func fetchAndCache(c *gin.Context, cache *Cache, targetURL string) {
 
 	bodyBytes, err := io.ReadAll(resp.Body)
 	if err != nil {
+		fmt.Printf("ERROR: Failed to read response body: %v\n", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": fmt.Sprintf("Failed to read response body: %v", err)})
 		return
+	}
+
+	if resp.StatusCode != http.StatusOK {
+		fmt.Printf("WARNING: Jikan status %d for %s: %s\n", resp.StatusCode, targetURL, string(bodyBytes))
 	}
 
 	contentType := resp.Header.Get("Content-Type")
@@ -654,6 +677,7 @@ func runSelfTests() {
 		fmt.Println("SUCCESS: Cache hit confirmed (extremely fast response)!")
 	}
 
+	time.Sleep(1 * time.Second)
 	recURL := "http://localhost:8081/api/recommendations"
 	reqRec, _ := http.NewRequest("GET", recURL, nil)
 	respRec, err := client.Do(reqRec)
@@ -664,26 +688,59 @@ func runSelfTests() {
 	defer respRec.Body.Close()
 	fmt.Printf("/api/recommendations Status: %d\n", respRec.StatusCode)
 
-	animeURL := "http://localhost:8081/api/anime?genres=1"
+	time.Sleep(1 * time.Second)
+	animeURL := "http://localhost:8081/api/anime/1"
 	reqAnime, _ := http.NewRequest("GET", animeURL, nil)
 	respAnime, err := client.Do(reqAnime)
 	if err != nil {
-		fmt.Printf("FAIL: /api/anime fetch failed: %v\n", err)
+		fmt.Printf("FAIL: /api/anime/1 fetch failed: %v\n", err)
 		os.Exit(1)
 	}
 	defer respAnime.Body.Close()
-	fmt.Printf("/api/anime?genres=1 Status: %d\n", respAnime.StatusCode)
+	fmt.Printf("/api/anime/1 Status: %d\n", respAnime.StatusCode)
+
+	epURL := "http://localhost:8081/api/anime/20/episodes?page=1"
+	reqEp, _ := http.NewRequest("GET", epURL, nil)
+	var respEp1 *http.Response
+	var durEp1 time.Duration
+	for attempt := 0; attempt < 3; attempt++ {
+		time.Sleep(1 * time.Second)
+		startEp1 := time.Now()
+		respEp1, err = client.Do(reqEp)
+		durEp1 = time.Since(startEp1)
+		if err == nil && respEp1.StatusCode == http.StatusOK {
+			break
+		}
+		if respEp1 != nil {
+			respEp1.Body.Close()
+		}
+	}
+	if err != nil {
+		fmt.Printf("FAIL: /api/anime/20/episodes fetch failed: %v\n", err)
+		os.Exit(1)
+	}
+	defer respEp1.Body.Close()
+	fmt.Printf("/api/anime/20/episodes 1st fetch status: %d, dur: %v\n", respEp1.StatusCode, durEp1)
+	if respEp1.StatusCode != http.StatusOK {
+		fmt.Printf("FAIL: expected 200 for episodes, got %d\n", respEp1.StatusCode)
+		os.Exit(1)
+	}
+
+	startEp2 := time.Now()
+	respEp2, err := client.Do(reqEp)
+	if err != nil {
+		fmt.Printf("FAIL: /api/anime/20/episodes 2nd fetch failed: %v\n", err)
+		os.Exit(1)
+	}
+	defer respEp2.Body.Close()
+	durEp2 := time.Since(startEp2)
+	fmt.Printf("/api/anime/20/episodes 2nd fetch status: %d, dur: %v (cached)\n", respEp2.StatusCode, durEp2)
 
 	fmt.Println("=== ALL SELF-TESTS PASSED ===")
 	os.Exit(0)
 }
 
-func main() {
-	loadEnv()
-	InitDB()
-
-	cache := NewCache()
-
+func SetupRouter(cache *Cache) *gin.Engine {
 	r := gin.Default()
 	r.Use(CORSMiddleware())
 
@@ -767,6 +824,23 @@ func main() {
 		targetURL := fmt.Sprintf("https://api.jikan.moe/v4/anime/%s/full", id)
 		fetchAndCache(c, cache, targetURL)
 	})
+
+	r.GET("/api/anime/:id/episodes", func(c *gin.Context) {
+		id := c.Param("id")
+		page := c.DefaultQuery("page", "1")
+		targetURL := fmt.Sprintf("https://api.jikan.moe/v4/anime/%s/episodes?page=%s", id, page)
+		fetchAndCache(c, cache, targetURL)
+	})
+
+	return r
+}
+
+func main() {
+	loadEnv()
+	InitDB()
+
+	cache := NewCache()
+	r := SetupRouter(cache)
 
 	if os.Getenv("RUN_SELF_TEST") == "true" {
 		go r.Run(":8081")

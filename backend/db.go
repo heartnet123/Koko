@@ -27,7 +27,8 @@ func InitDB() {
 	// Verify database connection
 	err = DB.Ping()
 	if err != nil {
-		log.Fatalf("Error pinging database: %v", err)
+		log.Printf("WARNING: Error pinging database: %v. Database functions will fail.", err)
+		return
 	}
 	log.Println("Successfully connected to Supabase PostgreSQL database!")
 

@@ -1,16 +1,37 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { ref, computed } from 'vue'
 import { useAuth } from '~/composables/useAuth'
+import type { JikanEpisodesResponse, JikanEpisode } from '~/types/anime'
 
 const route = useRoute()
 const auth = useAuth()
 
-const animeId = computed(() => route.params.id)
+const animeId = computed(() => route.params.id as string)
 const { data: response, status, error } = await useFetch<{ data: any }>(
   () => `http://localhost:8080/api/anime/${animeId.value}`,
   { key: `anime-${animeId.value}` }
 )
 const anime = computed(() => response.value?.data)
+
+const episodePage = ref(1)
+const { data: episodesResponse, status: episodesStatus } = await useFetch<JikanEpisodesResponse>(
+  () => `http://localhost:8080/api/anime/${animeId.value}/episodes?page=${episodePage.value}`,
+  {
+    key: `anime-episodes-${animeId.value}-${episodePage.value}`,
+    watch: [episodePage, animeId],
+  }
+)
+const episodes = computed<JikanEpisode[]>(() => episodesResponse.value?.data || [])
+const episodesPagination = computed(() => episodesResponse.value?.pagination)
+
+const formatEpisodeDate = (dateStr?: string | null) => {
+  if (!dateStr) return 'TBA'
+  try {
+    return new Date(dateStr).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+  } catch {
+    return dateStr
+  }
+}
 useHead(() => ({
   title: anime.value
     ? `${anime.value.title_english || anime.value.title} — KoKo`
@@ -252,6 +273,96 @@ const toggleWatchlist = async () => {
             <h2 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight">Synopsis</h2>
           </div>
           <p class="text-xs md:text-sm text-[var(--ui-text)] leading-relaxed whitespace-pre-line font-normal">{{ anime.synopsis }}</p>
+        </section>
+
+        <!-- Episodes Section -->
+        <section id="episodes-section" class="glass-surface rounded-3xl border border-[var(--glass-border)] p-6 md:p-8 shadow-sm">
+          <div class="flex items-center justify-between mb-4">
+            <div class="flex items-center gap-2">
+              <UIcon name="i-solar-clapperboard-play-linear" class="w-5 h-5 text-primary-400" />
+              <h2 class="text-base font-bold text-[var(--ui-text-highlighted)] tracking-tight">Episodes</h2>
+            </div>
+            <span v-if="episodesPagination" class="text-xs font-mono text-[var(--ui-text-toned)]">
+              Page {{ episodePage }} / {{ episodesPagination.last_visible_page }}
+            </span>
+          </div>
+
+          <!-- Loading State -->
+          <div v-if="episodesStatus === 'pending'" class="space-y-2.5">
+            <div v-for="i in 5" :key="i" class="h-12 glass-pill animate-glass-shimmer rounded-2xl" />
+          </div>
+
+          <!-- Episode List -->
+          <div v-else-if="episodes.length" class="space-y-2 max-h-[460px] overflow-y-auto pr-1">
+            <NuxtLink
+              v-for="ep in episodes"
+              :key="ep.mal_id"
+              :to="`/watch/${animeId}/${ep.mal_id}`"
+              class="flex items-center justify-between p-3 rounded-2xl glass-pill hover:bg-white/10 hover:border-primary-400/40 transition-all group cursor-pointer"
+            >
+              <div class="flex items-center gap-3 min-w-0">
+                <span class="glass-chip text-primary-400 font-mono font-bold text-xs px-2.5 py-1 rounded-xl flex-shrink-0">
+                  EP {{ ep.mal_id }}
+                </span>
+                <div class="min-w-0">
+                  <p class="text-xs md:text-sm font-semibold text-[var(--ui-text-highlighted)] group-hover:text-primary-400 transition-colors truncate">
+                    {{ ep.title }}
+                  </p>
+                  <p v-if="ep.title_japanese" class="text-[10px] text-[var(--ui-text-toned)] truncate font-mono">
+                    {{ ep.title_japanese }}
+                  </p>
+                </div>
+                <span v-if="ep.filler" class="text-[10px] font-mono font-bold text-[var(--ui-warn)] glass-chip px-2 py-0.5 rounded-lg flex-shrink-0">
+                  Filler
+                </span>
+                <span v-if="ep.recap" class="text-[10px] font-mono font-bold text-[var(--ui-text-toned)] glass-chip px-2 py-0.5 rounded-lg flex-shrink-0">
+                  Recap
+                </span>
+              </div>
+
+              <div class="flex items-center gap-3 flex-shrink-0 ml-3">
+                <span class="text-[11px] font-mono text-[var(--ui-text-toned)] whitespace-nowrap">
+                  {{ formatEpisodeDate(ep.aired) }}
+                </span>
+                <UIcon name="i-solar-play-linear" class="w-4 h-4 text-[var(--ui-text-toned)] group-hover:text-primary-400 group-hover:translate-x-0.5 transition-all" />
+              </div>
+            </NuxtLink>
+          </div>
+
+          <!-- Empty State -->
+          <div v-else class="text-center py-8">
+            <p class="text-xs text-[var(--ui-text-toned)]">No episode data available for this anime.</p>
+          </div>
+
+          <!-- Pagination Controls -->
+          <div
+            v-if="episodesPagination && episodesPagination.last_visible_page > 1"
+            class="flex items-center justify-between pt-4 mt-4 border-t border-[var(--glass-border-subtle)]"
+          >
+            <UButton
+              label="Previous"
+              icon="i-solar-alt-arrow-left-linear"
+              size="xs"
+              variant="ghost"
+              color="neutral"
+              class="glass-pill text-xs font-semibold"
+              :disabled="episodePage <= 1"
+              @click="episodePage--"
+            />
+            <span class="text-xs font-mono text-[var(--ui-text-toned)]">
+              {{ episodePage }} of {{ episodesPagination.last_visible_page }}
+            </span>
+            <UButton
+              label="Next"
+              trailing-icon="i-solar-alt-arrow-right-linear"
+              size="xs"
+              variant="ghost"
+              color="neutral"
+              class="glass-pill text-xs font-semibold"
+              :disabled="!episodesPagination.has_next_page"
+              @click="episodePage++"
+            />
+          </div>
         </section>
 
         <!-- Background Information -->
